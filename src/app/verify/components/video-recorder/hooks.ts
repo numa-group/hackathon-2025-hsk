@@ -25,8 +25,6 @@ export const useVideoRecorder = () => {
         }
       };
       
-      // onstop will be set in the stopRecording function
-      
       mediaRecorder.start();
       setIsRecording(true);
     } catch (error) {
@@ -38,17 +36,14 @@ export const useVideoRecorder = () => {
     if (mediaRecorderRef.current && isRecording) {
       return new Promise<Blob>((resolve) => {
         mediaRecorderRef.current!.onstop = () => {
-          const videoBlob = new Blob(videoChunksRef.current, { type: 'video/mp4' });
+          const videoBlob = new Blob(videoChunksRef.current, { type: 'video/webm' });
           setVideoBlob(videoBlob);
           
-          // Stop all tracks
           if (streamRef.current) {
             streamRef.current.getTracks().forEach(track => track.stop());
           }
           
-          // Clear the stream state
           setStream(null);
-          
           resolve(videoBlob);
         };
         
@@ -62,51 +57,29 @@ export const useVideoRecorder = () => {
   const resetRecording = useCallback(() => {
     setVideoBlob(null);
     
-    // If there's an active stream, stop all tracks
     if (streamRef.current) {
       streamRef.current.getTracks().forEach(track => track.stop());
       streamRef.current = null;
     }
     
-    // Clear the stream state
     setStream(null);
-    
-    // Reset media recorder
     mediaRecorderRef.current = null;
     videoChunksRef.current = [];
   }, []);
 
+  // Simplified submitVideo that just triggers the callback with the video blob
   const submitVideo = useCallback(async () => {
-    if (!videoBlob) return null;
+    if (!videoBlob) return;
     
     setIsLoading(true);
     
-    // Mock API call - replace with actual API
-    try {
-      // In a real implementation, you would upload the video to your backend
-      // const formData = new FormData();
-      // formData.append('video', videoBlob);
-      // const response = await fetch('/api/verify', { method: 'POST', body: formData });
-      // const data = await response.json();
-      
-      // Mock response for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      const mockResponse = {
-        items: [
-          { id: '1', description: 'TV remote placed on bedside table', status: 'verified' },
-          { id: '2', description: 'Welcome card on bed', status: 'verified' },
-          { id: '3', description: 'Fresh towels in bathroom', status: 'unverified' },
-          { id: '4', description: 'Minibar stocked', status: 'declined' },
-        ]
-      };
-      
-      setIsLoading(false);
-      return mockResponse;
-    } catch (error) {
-      console.error('Error submitting video:', error);
-      setIsLoading(false);
-      return null;
-    }
+    // Simulate a brief processing delay
+    await new Promise(resolve => setTimeout(resolve, 500));
+    
+    setIsLoading(false);
+    
+    // Return the video blob for the parent component to handle
+    return videoBlob;
   }, [videoBlob]);
 
   return {

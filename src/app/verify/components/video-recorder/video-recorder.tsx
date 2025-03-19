@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useRef, useEffect, useCallback } from "react";
-import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useVideoRecorder } from "./hooks";
 import { VideoRecorderProps } from "./types";
@@ -16,9 +15,9 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
     stopRecording,
     resetRecording,
     submitVideo,
+    isLoading
   } = useVideoRecorder();
   const [videoPreviewUrl, setVideoPreviewUrl] = useState<string | null>(null);
-  const [isProcessing, setIsProcessing] = useState(false);
 
   // Start recording automatically when component mounts
   useEffect(() => {
@@ -38,7 +37,6 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
 
   const handleStopRecording = async () => {
     await stopRecording();
-    // We'll let the useEffect that watches videoBlob handle the submission
   };
 
   const handleReset = () => {
@@ -61,47 +59,35 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
   }, [stream]);
 
   const handleSubmit = async () => {
-    if (isProcessing) return; // Prevent multiple submissions
+    if (isLoading) return;
     
-    setIsProcessing(true);
-    // Notify parent that processing has started
     onSubmit();
     
-    // Process the video in the background
-    setTimeout(async () => {
-      const results = await submitVideo();
-      if (results) {
-        onVideoProcessed(results);
-      }
-      setIsProcessing(false);
-    }, 500);
+    const blob = await submitVideo();
+    if (blob) {
+      // For the storyboard, we'll just pass a mock result
+      onVideoProcessed({
+        items: [
+          { id: '1', description: 'TV remote placed on bedside table', status: 'verified' },
+          { id: '2', description: 'Welcome card on bed', status: 'verified' },
+          { id: '3', description: 'Fresh towels in bathroom', status: 'unverified' },
+          { id: '4', description: 'Minibar stocked', status: 'declined' },
+          { id: '5', description: 'Bed properly made', status: 'verified' },
+        ]
+      });
+    }
   };
   
-  // Create a memoized version of handleSubmit
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  const memoizedHandleSubmit = useCallback(handleSubmit, [onSubmit, onVideoProcessed, submitVideo]);
-  
   useEffect(() => {
-    // When videoBlob changes, update the preview URL and auto-submit
+    // When videoBlob changes, update the preview URL
     if (videoBlob) {
       const url = URL.createObjectURL(videoBlob);
       setVideoPreviewUrl(url);
-      
-      // Auto-submit after a short delay to allow the UI to update
-      setTimeout(() => {
-        memoizedHandleSubmit();
-      }, 500);
     }
-  }, [videoBlob, memoizedHandleSubmit]);
+  }, [videoBlob]);
 
   return (
-    <motion.div
-      className="w-full flex flex-col items-center h-full"
-      initial={{ opacity: 0, scale: 0.95 }}
-      animate={{ opacity: 1, scale: 1 }}
-      exit={{ opacity: 0, scale: 0.95 }}
-      transition={{ type: "spring", stiffness: 300, damping: 25 }}
-    >
+    <div className="w-full flex flex-col h-full">
       <div className="relative w-full flex-1 bg-black overflow-hidden">
         <Button 
           variant="ghost" 
@@ -113,18 +99,10 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
         </Button>
         
         {isRecording && (
-          <motion.div
-            className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/50 rounded-full text-white text-xs"
-            animate={{ opacity: [1, 0.8] }}
-            transition={{ repeat: Infinity, duration: 1 }}
-          >
-            <motion.div
-              className="w-3 h-3 rounded-full bg-red-500"
-              animate={{ scale: [1, 1.2, 1] }}
-              transition={{ repeat: Infinity, duration: 1.5 }}
-            />
+          <div className="absolute top-4 right-4 flex items-center gap-2 px-3 py-1.5 bg-black/50 rounded-full text-white text-xs">
+            <div className="w-3 h-3 rounded-full bg-red-500" />
             Recording
-          </motion.div>
+          </div>
         )}
 
         {videoPreviewUrl ? (
@@ -165,7 +143,7 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
           <Button
             onClick={handleStopRecording}
             variant="destructive"
-            className="w-full h-14 text-base"
+            className="w-full h-12 text-base"
             size="lg"
           >
             Stop Recording
@@ -174,15 +152,15 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
           <Button
             onClick={startRecording}
             variant="default"
-            className="w-full h-14 text-base"
+            className="w-full h-12 text-base"
             size="lg"
           >
             Start Recording
           </Button>
-        ) : isProcessing ? (
+        ) : isLoading ? (
           <Button
             disabled
-            className="w-full h-14 text-base"
+            className="w-full h-12 text-base"
             size="lg"
           >
             <Loader2 className="mr-2 h-5 w-5 animate-spin" />
@@ -190,19 +168,19 @@ export const VideoRecorder = ({ onVideoProcessed, onCancel, onSubmit }: VideoRec
           </Button>
         ) : (
           <div className="flex gap-3 w-full">
-            <Button onClick={handleReset} variant="outline" className="flex-1 h-14">
+            <Button onClick={handleReset} variant="outline" className="flex-1 h-12">
               Record Again
             </Button>
             <Button
               onClick={handleSubmit}
               variant="default"
-              className="flex-1 h-14"
+              className="flex-1 h-12"
             >
               Process Video
             </Button>
           </div>
         )}
       </div>
-    </motion.div>
+    </div>
   );
 };
