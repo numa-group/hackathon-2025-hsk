@@ -70,6 +70,10 @@ export const useVideoRecorder = () => {
     
     // Clear the stream state
     setStream(null);
+    
+    // Reset media recorder
+    mediaRecorderRef.current = null;
+    videoChunksRef.current = [];
   }, []);
 
   const submitVideo = useCallback(async () => {
