@@ -269,8 +269,7 @@ watch-files: true
 #auto-lint: true
 
 ## Specify command to run tests
-#test-cmd: xxx
-
+test-cmd: pnpm lint
 ## Enable/disable automatic testing after changes (default: False)
 #auto-test: false
 
@@ -338,8 +337,7 @@ watch-files: true
 #show-repo-map: false
 
 ## Print the system prompts and exit (debug)
-#show-prompts: false
-
+# show-prompts: true
 #################
 # Voice settings:
 
