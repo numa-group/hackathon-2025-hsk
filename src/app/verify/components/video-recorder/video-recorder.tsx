@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "motion/react";
 import { Button } from "@/components/ui/button";
 import { useVideoRecorder } from "./hooks";
@@ -12,6 +12,7 @@ export const VideoRecorder = ({ onVideoProcessed }: VideoRecorderProps) => {
     isRecording,
     videoBlob,
     isLoading,
+    stream,
     startRecording,
     stopRecording,
     resetRecording,
@@ -24,12 +25,18 @@ export const VideoRecorder = ({ onVideoProcessed }: VideoRecorderProps) => {
   };
 
   const handleStopRecording = async () => {
-    const blob = await stopRecording();
-    if (blob) {
-      const url = URL.createObjectURL(blob);
+    await stopRecording();
+    // The videoBlob will be set in the stopRecording function
+    // and the useEffect above will create the preview URL
+  };
+
+  useEffect(() => {
+    // When videoBlob changes, update the preview URL
+    if (videoBlob) {
+      const url = URL.createObjectURL(videoBlob);
       setVideoPreviewUrl(url);
     }
-  };
+  }, [videoBlob]);
 
   const handleReset = () => {
     resetRecording();
@@ -38,6 +45,16 @@ export const VideoRecorder = ({ onVideoProcessed }: VideoRecorderProps) => {
       setVideoPreviewUrl(null);
     }
   };
+
+  // Reference for the video element
+  const videoRef = useRef<HTMLVideoElement | null>(null);
+
+  // Set up the video stream when it becomes available
+  useEffect(() => {
+    if (stream && videoRef.current) {
+      videoRef.current.srcObject = stream;
+    }
+  }, [stream]);
 
   const handleSubmit = async () => {
     const results = await submitVideo();
@@ -77,11 +94,19 @@ export const VideoRecorder = ({ onVideoProcessed }: VideoRecorderProps) => {
             </button>
           </div>
         ) : (
-          <div className="flex items-center justify-center h-full">
-            {isRecording ? (
-              <p className="text-sm text-muted-foreground">Recording...</p>
+          <div className="w-full h-full">
+            {isRecording || stream ? (
+              <video
+                ref={videoRef}
+                autoPlay
+                playsInline
+                muted
+                className="w-full h-full object-cover"
+              />
             ) : (
-              <Video className="h-10 w-10 text-muted-foreground" />
+              <div className="flex items-center justify-center h-full">
+                <Video className="h-10 w-10 text-muted-foreground" />
+              </div>
             )}
           </div>
         )}

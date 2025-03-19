@@ -1,3 +1,5 @@
+import { ChecklistItem } from "../checklist/types";
+
 export interface VideoRecorderProps {
-  onVideoProcessed: (results: any) => void;
+  onVideoProcessed: (results: { items: ChecklistItem[] }) => void;
 }

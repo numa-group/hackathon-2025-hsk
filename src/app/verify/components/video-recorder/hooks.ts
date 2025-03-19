@@ -7,14 +7,16 @@ export const useVideoRecorder = () => {
   const videoChunksRef = useRef<Blob[]>([]);
   const streamRef = useRef<MediaStream | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [stream, setStream] = useState<MediaStream | null>(null);
 
   const startRecording = useCallback(async () => {
     try {
       videoChunksRef.current = [];
-      const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
-      streamRef.current = stream;
+      const mediaStream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+      streamRef.current = mediaStream;
+      setStream(mediaStream);
       
-      const mediaRecorder = new MediaRecorder(stream);
+      const mediaRecorder = new MediaRecorder(mediaStream);
       mediaRecorderRef.current = mediaRecorder;
       
       mediaRecorder.ondataavailable = (event) => {
@@ -44,6 +46,9 @@ export const useVideoRecorder = () => {
             streamRef.current.getTracks().forEach(track => track.stop());
           }
           
+          // Clear the stream state
+          setStream(null);
+          
           resolve(videoBlob);
         };
         
@@ -56,6 +61,15 @@ export const useVideoRecorder = () => {
 
   const resetRecording = useCallback(() => {
     setVideoBlob(null);
+    
+    // If there's an active stream, stop all tracks
+    if (streamRef.current) {
+      streamRef.current.getTracks().forEach(track => track.stop());
+      streamRef.current = null;
+    }
+    
+    // Clear the stream state
+    setStream(null);
   }, []);
 
   const submitVideo = useCallback(async () => {
@@ -95,6 +109,7 @@ export const useVideoRecorder = () => {
     isRecording,
     videoBlob,
     isLoading,
+    stream,
     startRecording,
     stopRecording,
     resetRecording,
