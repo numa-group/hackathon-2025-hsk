@@ -14,8 +14,8 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Hackathon HSK",
-  description: "Hackathon HSK - Your AI-powered hackathon platform",
+  title: "2025 Hackathon",
+  description: "2025 Hackathon from Numa",
 };
 
 export default function RootLayout({
@@ -27,9 +27,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body
         className={cn(
-          "min-h-screen bg-background font-sans antialiased",
+          "min-h-screen bg-background font-sans antialiased dark",
           geistSans.variable,
-          geistMono.variable
+          geistMono.variable,
         )}
       >
         <div className="relative flex min-h-screen flex-col">

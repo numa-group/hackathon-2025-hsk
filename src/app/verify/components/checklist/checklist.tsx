@@ -1,0 +1,90 @@
+"use client";
+
+import { motion } from "motion/react";
+import { ChecklistItem, VerificationStatus } from "./types";
+import { cn } from "@/lib/utils";
+import { CheckCircle, AlertCircle, XCircle, Circle } from "lucide-react";
+
+interface ChecklistProps {
+  items: ChecklistItem[];
+}
+
+export const Checklist = ({ items }: ChecklistProps) => {
+  const getStatusIcon = (status: VerificationStatus) => {
+    switch (status) {
+      case "verified":
+        return <CheckCircle className="h-5 w-5 text-green-500" />;
+      case "unverified":
+        return <AlertCircle className="h-5 w-5 text-amber-500" />;
+      case "declined":
+        return <XCircle className="h-5 w-5 text-red-500" />;
+      default:
+        return <Circle className="h-5 w-5 text-muted-foreground" />;
+    }
+  };
+
+  const getStatusText = (status: VerificationStatus) => {
+    switch (status) {
+      case "verified":
+        return "Verified";
+      case "unverified":
+        return "Couldn't Verify";
+      case "declined":
+        return "Not Present";
+      default:
+        return "Pending";
+    }
+  };
+
+  const getStatusClass = (status: VerificationStatus) => {
+    switch (status) {
+      case "verified":
+        return "text-green-500 bg-green-50 dark:bg-green-950/30";
+      case "unverified":
+        return "text-amber-500 bg-amber-50 dark:bg-amber-950/30";
+      case "declined":
+        return "text-red-500 bg-red-50 dark:bg-red-950/30";
+      default:
+        return "text-muted-foreground bg-muted/50";
+    }
+  };
+
+  return (
+    <motion.div
+      className="w-full space-y-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      transition={{ duration: 0.3 }}
+    >
+      <h2 className="text-xl font-semibold">Housekeeping Checklist</h2>
+      <ul className="space-y-3">
+        {items.map((item, index) => (
+          <motion.li
+            key={item.id}
+            className="p-3 rounded-lg border bg-card"
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: index * 0.1 }}
+          >
+            <div className="flex items-start gap-3">
+              <div className="mt-0.5">{getStatusIcon(item.status)}</div>
+              <div className="flex-1">
+                <p className="text-sm font-medium">{item.description}</p>
+                <div className="mt-1">
+                  <span
+                    className={cn(
+                      "text-xs px-2 py-0.5 rounded-full",
+                      getStatusClass(item.status),
+                    )}
+                  >
+                    {getStatusText(item.status)}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </motion.li>
+        ))}
+      </ul>
+    </motion.div>
+  );
+};
