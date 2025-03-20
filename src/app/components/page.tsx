@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { VerificationScreen } from "./verification-screen";
+import { VerificationScreen, VerificationScreenState } from "./verification-screen";
 import { Checklist, ChecklistItem } from "./checklist";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
@@ -9,21 +9,96 @@ import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@
 import { Button } from "@/components/ui/button";
 import { demoChecklistItems, checklistVariants } from "./constants";
 
-export default function ComponentsPage() {
+// Verification Screen Demo Component
+const VerificationScreenDemo = () => {
+  const [state, setState] = useState<VerificationScreenState>("initial");
   const [isLoading, setIsLoading] = useState(false);
+  const [items, setItems] = useState<ChecklistItem[]>(demoChecklistItems);
+  
+  // Handle record button click
+  const handleRecordClick = () => {
+    setIsLoading(true);
+    
+    // Simulate loading and transition to update state
+    setTimeout(() => {
+      setIsLoading(false);
+      setState("update");
+      // Update some items to verified status
+      setItems(prev => 
+        prev.map((item, index) => 
+          index < 2 ? { ...item, status: "verified" } : item
+        )
+      );
+    }, 1500);
+  };
+  
+  // Handle continue button click
+  const handleContinueClick = () => {
+    setIsLoading(true);
+    
+    // Simulate loading and transition to success state
+    setTimeout(() => {
+      setIsLoading(false);
+      // Mark all items as verified
+      setItems(prev => 
+        prev.map(item => ({ ...item, status: "verified" }))
+      );
+      setState("success");
+    }, 1500);
+  };
+  
+  // Reset demo
+  const handleReset = () => {
+    setState("initial");
+    setItems(demoChecklistItems);
+  };
+  
+  return (
+    <div className="space-y-4">
+      <div className="flex justify-between items-center mb-4">
+        <div>
+          <h3 className="text-lg font-medium">Current State: {state}</h3>
+          <p className="text-sm text-muted-foreground">
+            Watch the transitions between states
+          </p>
+        </div>
+        <Button variant="outline" onClick={handleReset}>
+          Reset Demo
+        </Button>
+      </div>
+      
+      <VerificationScreen
+        title={
+          state === "initial" 
+            ? "Video Verification" 
+            : state === "update" 
+              ? "Continue Verification" 
+              : "Verification Complete"
+        }
+        description={
+          state === "initial"
+            ? "Complete the verification process by recording a short video"
+            : state === "update"
+              ? "Review your verification status and continue the process"
+              : "All items have been successfully verified"
+        }
+        checklistItems={items}
+        onRecordClick={handleRecordClick}
+        onContinueClick={handleContinueClick}
+        isLoading={isLoading}
+        state={state}
+        successMessage="Congratulations! Your identity has been successfully verified."
+      />
+    </div>
+  );
+};
+
+export default function ComponentsPage() {
   const [, setSelectedComponent] = useState("checklist");
   const [checklistVariant, setChecklistVariant] = useState("mixed");
   const [items, setItems] = useState<ChecklistItem[]>(
     checklistVariants[checklistVariant as keyof typeof checklistVariants]
   );
-  
-  const handleRecordClick = () => {
-    setIsLoading(true);
-    // Simulate loading state for demo purposes
-    setTimeout(() => {
-      setIsLoading(false);
-    }, 2000);
-  };
 
   // Update items when variant changes
   const handleVariantChange = (value: string) => {
@@ -104,7 +179,7 @@ export default function ComponentsPage() {
                     size="sm"
                     onClick={() => cycleItemStatus(item.id)}
                   >
-                    Change "{item.title}" status
+                    Change &quot;{item.title}&quot; status
                   </Button>
                 ))}
               </div>
@@ -116,48 +191,7 @@ export default function ComponentsPage() {
           <div className="w-full max-w-md mx-auto">
             <h2 className="text-2xl font-semibold mb-4">Verification Screen</h2>
             
-            <Tabs defaultValue="initial" className="mb-8">
-              <TabsList>
-                <TabsTrigger value="initial">Initial State</TabsTrigger>
-                <TabsTrigger value="update">Update State</TabsTrigger>
-                <TabsTrigger value="success">Success State</TabsTrigger>
-              </TabsList>
-              
-              <TabsContent value="initial">
-                <VerificationScreen
-                  title="Video Verification"
-                  description="Complete the verification process by recording a short video"
-                  checklistItems={demoChecklistItems}
-                  onRecordClick={handleRecordClick}
-                  isLoading={isLoading}
-                  state="initial"
-                />
-              </TabsContent>
-              
-              <TabsContent value="update">
-                <VerificationScreen
-                  title="Continue Verification"
-                  description="Review your verification status and continue the process"
-                  checklistItems={checklistVariants.mixed}
-                  onRecordClick={handleRecordClick}
-                  onContinueClick={handleRecordClick}
-                  isLoading={isLoading}
-                  state="update"
-                />
-              </TabsContent>
-              
-              <TabsContent value="success">
-                <VerificationScreen
-                  title="Verification Complete"
-                  description="All items have been successfully verified"
-                  checklistItems={checklistVariants.allVerified}
-                  onRecordClick={handleRecordClick}
-                  isLoading={isLoading}
-                  state="success"
-                  successMessage="Congratulations! Your identity has been successfully verified."
-                />
-              </TabsContent>
-            </Tabs>
+            <VerificationScreenDemo />
           </div>
         </TabsContent>
       </Tabs>
