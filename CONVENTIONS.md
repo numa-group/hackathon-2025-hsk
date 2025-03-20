@@ -29,8 +29,8 @@ button/
 
 ## Component Organization
 
-- Page-specific components: `/app/[route]/components/`
-- Global components: `/src/components/`
+- All application specific components should be placed in: `src/app/components/*` folder.
+- All shadcn components will be placed in 'src/components/\*' folder.
 
 ## Naming Conventions
 
