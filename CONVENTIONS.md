@@ -73,7 +73,7 @@ import { Button } from "../../../components/button";
 
 ## Tailwind Style Organization
 
-- Use `cn()` from `/lib/utils.ts` for className composition
+- Use `cn()` from `@/lib/utils.ts` for className composition
 - Organize Tailwind classes in the following order:
   1. Layout styles (flex, grid, positioning, sizing)
   2. Visual styles (colors, borders, shadows)
@@ -101,7 +101,8 @@ import { Button } from "../../../components/button";
 ## Animation Standards
 
 - Use Motion for all animations. (motion/react package)
-- No CSS transitions or animations unless explicitly approved
+- For simpler ones use CSS transitions.
+- Use what might be more simpler and efficient for the specific use case.
 
 ## Icon System
 
