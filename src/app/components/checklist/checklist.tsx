@@ -4,19 +4,21 @@ import { CheckCircle, XCircle, Circle } from "lucide-react";
 import { motion, AnimatePresence } from "motion/react";
 import { useMemo } from "react";
 
-export const Checklist = ({
-  items,
-  title = "Verification Checklist",
-  description = "The following items need to be verified through video recording",
-}: ChecklistProps) => {
+export const Checklist = ({ items }: ChecklistProps) => {
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "verified":
-        return <CheckCircle className="h-5 w-5 text-green-500 transition-colors duration-500" />;
+        return (
+          <CheckCircle className="h-5 w-5 text-green-500 transition-colors duration-500" />
+        );
       case "declined":
-        return <XCircle className="h-5 w-5 text-red-500 transition-colors duration-500" />;
+        return (
+          <XCircle className="h-5 w-5 text-red-500 transition-colors duration-500" />
+        );
       default:
-        return <Circle className="h-5 w-5 text-gray-300 transition-colors duration-500" />;
+        return (
+          <Circle className="h-5 w-5 text-gray-300 transition-colors duration-500" />
+        );
     }
   };
 
@@ -39,15 +41,6 @@ export const Checklist = ({
 
   return (
     <div className="w-full">
-      {(title || description) && (
-        <div className="mb-6">
-          {title && <h3 className="text-lg font-semibold">{title}</h3>}
-          {description && (
-            <p className="text-sm text-muted-foreground mt-1">{description}</p>
-          )}
-        </div>
-      )}
-
       <div className="space-y-3">
         <AnimatePresence initial={false}>
           {sortedItems.map((item) => (
@@ -69,10 +62,10 @@ export const Checklist = ({
                 className="mt-0.5"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
-                transition={{ 
-                  type: "tween", 
-                  ease: "easeInOut", 
-                  duration: 0.4 
+                transition={{
+                  type: "tween",
+                  ease: "easeInOut",
+                  duration: 0.4,
                 }}
               >
                 {getStatusIcon(item.status)}
