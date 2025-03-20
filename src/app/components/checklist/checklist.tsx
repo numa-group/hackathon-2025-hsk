@@ -1,6 +1,8 @@
 import { cn } from "@/lib/utils";
 import { ChecklistProps } from "./types";
 import { CheckCircle, XCircle, Circle } from "lucide-react";
+import { motion, AnimatePresence } from "motion/react";
+import { useMemo } from "react";
 
 export const Checklist = ({
   items,
@@ -23,31 +25,65 @@ export const Checklist = ({
       "flex items-start gap-3 p-4 rounded-lg border",
       status === "verified" && "bg-green-950/30 border-green-800",
       status === "declined" && "bg-red-950/30 border-red-800",
-      status === "unverified" && "bg-gray-800/30 border-gray-700"
+      status === "unverified" && "bg-gray-800/30 border-gray-700",
     );
   };
+
+  // Sort items by status: unverified, declined, verified
+  const sortedItems = useMemo(() => {
+    return [...items].sort((a, b) => {
+      const statusOrder = { unverified: 0, declined: 1, verified: 2 };
+      return statusOrder[a.status] - statusOrder[b.status];
+    });
+  }, [items]);
 
   return (
     <div className="w-full">
       {(title || description) && (
         <div className="mb-6">
           {title && <h3 className="text-lg font-semibold">{title}</h3>}
-          {description && <p className="text-sm text-muted-foreground mt-1">{description}</p>}
+          {description && (
+            <p className="text-sm text-muted-foreground mt-1">{description}</p>
+          )}
         </div>
       )}
-      
+
       <div className="space-y-3">
-        {items.map((item) => (
-          <div key={item.id} className={getItemClassName(item.status)}>
-            <div className="mt-0.5">{getStatusIcon(item.status)}</div>
-            <div className="flex-1">
-              <h4 className="font-medium text-foreground">{item.title}</h4>
-              {item.description && (
-                <p className="text-sm text-muted-foreground mt-1">{item.description}</p>
-              )}
-            </div>
-          </div>
-        ))}
+        <AnimatePresence initial={false}>
+          {sortedItems.map((item) => (
+            <motion.div
+              key={item.id}
+              layout
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, height: 0, marginTop: 0 }}
+              transition={{
+                type: "spring",
+                stiffness: 500,
+                damping: 30,
+                opacity: { duration: 0.2 },
+              }}
+              className={getItemClassName(item.status)}
+            >
+              <motion.div
+                className="mt-0.5"
+                initial={{ scale: 0.8 }}
+                animate={{ scale: 1 }}
+                transition={{ type: "spring", stiffness: 500 }}
+              >
+                {getStatusIcon(item.status)}
+              </motion.div>
+              <div className="flex-1">
+                <h4 className="font-medium text-foreground">{item.title}</h4>
+                {item.description && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {item.description}
+                  </p>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </AnimatePresence>
       </div>
     </div>
   );
