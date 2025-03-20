@@ -38,36 +38,27 @@ const VideoRecorderDemo = () => {
   return (
     <div className="space-y-4">
       <Card>
-        <CardHeader>
-          <CardTitle>Video Recorder</CardTitle>
-          <CardDescription>
-            Record a video with your camera
-          </CardDescription>
-        </CardHeader>
         <CardContent>
           {!isRecording ? (
             <div className="flex flex-col gap-4">
-              <div className="flex justify-between items-center">
-                <div>
-                  <h3 className="text-sm font-medium">Max Duration</h3>
-                  <p className="text-xs text-muted-foreground">
-                    Set the maximum recording duration in seconds
-                  </p>
+              <div className="flex justify-between items-center mb-4">
+                <div className="flex items-center gap-2">
+                  <Select 
+                    value={maxDuration.toString()} 
+                    onValueChange={handleDurationChange}
+                  >
+                    <SelectTrigger className="w-[100px]">
+                      <SelectValue placeholder="Duration" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="10">10 sec</SelectItem>
+                      <SelectItem value="30">30 sec</SelectItem>
+                      <SelectItem value="60">60 sec</SelectItem>
+                      <SelectItem value="120">2 min</SelectItem>
+                    </SelectContent>
+                  </Select>
+                  <span className="text-xs text-muted-foreground">Max duration</span>
                 </div>
-                <Select 
-                  value={maxDuration.toString()} 
-                  onValueChange={handleDurationChange}
-                >
-                  <SelectTrigger className="w-[100px]">
-                    <SelectValue placeholder="Duration" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="10">10 sec</SelectItem>
-                    <SelectItem value="30">30 sec</SelectItem>
-                    <SelectItem value="60">60 sec</SelectItem>
-                    <SelectItem value="120">2 min</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
               
               <Button onClick={handleStartRecording}>
@@ -163,14 +154,13 @@ const VerificationScreenDemo = () => {
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-4">
-        <div>
-          <h3 className="text-lg font-medium">Current State: {state}</h3>
-          <p className="text-sm text-muted-foreground">
-            Watch the transitions between states
-          </p>
+        <div className="flex items-center gap-2">
+          <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+            {state}
+          </div>
         </div>
-        <Button variant="outline" onClick={handleReset}>
-          Reset Demo
+        <Button variant="outline" size="sm" onClick={handleReset}>
+          Reset
         </Button>
       </div>
       
@@ -232,8 +222,8 @@ export default function ComponentsPage() {
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
-      <h1 className="text-4xl font-bold mb-8">Components</h1>
-      <p className="text-lg mb-8">This page showcases our components in isolation.</p>
+      <h1 className="text-3xl font-bold mb-4">Components</h1>
+      <p className="text-muted-foreground mb-8">Interactive showcase of our application components</p>
       
       <Tabs 
         defaultValue="checklist" 
@@ -247,69 +237,70 @@ export default function ComponentsPage() {
           <TabsTrigger value="video-recorder">Video Recorder</TabsTrigger>
         </TabsList>
         
-        <TabsContent value="checklist" className="space-y-6">
-          <div className="flex justify-between items-center">
-            <h2 className="text-2xl font-semibold">Checklist Component</h2>
-            <Select value={checklistVariant} onValueChange={handleVariantChange}>
-              <SelectTrigger className="w-[180px]">
-                <SelectValue placeholder="Select variant" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="allVerified">All Verified</SelectItem>
-                <SelectItem value="mixed">Mixed Status</SelectItem>
-                <SelectItem value="noneVerified">None Verified</SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-          
-          <Card>
-            <CardHeader>
-              <CardTitle>Checklist Variant: {checklistVariant}</CardTitle>
-              <CardDescription>
-                {checklistVariant === "allVerified" && "All items are verified"}
-                {checklistVariant === "mixed" && "Items have mixed verification statuses"}
-                {checklistVariant === "noneVerified" && "No items are verified"}
-              </CardDescription>
+        <TabsContent value="checklist" className="space-y-6 w-full max-w-md mx-auto">
+          <Card className="w-full">
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <div>
+                <CardTitle>Checklist</CardTitle>
+                <CardDescription>Verification status indicators</CardDescription>
+              </div>
+              <Select value={checklistVariant} onValueChange={handleVariantChange}>
+                <SelectTrigger className="w-[130px]">
+                  <SelectValue placeholder="Variant" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="allVerified">All Verified</SelectItem>
+                  <SelectItem value="mixed">Mixed Status</SelectItem>
+                  <SelectItem value="noneVerified">None Verified</SelectItem>
+                </SelectContent>
+              </Select>
             </CardHeader>
-            <CardContent>
+          
+            <CardContent className="pt-6">
               <Checklist 
                 items={items} 
                 title="Verification Checklist"
                 description="The following items need to be verified through video recording"
               />
             </CardContent>
-            <CardFooter className="flex-col items-start gap-3">
-              <p className="text-sm text-muted-foreground">Click on an item to cycle through statuses:</p>
-              <div className="flex flex-wrap gap-2">
-                {items.map(item => (
-                  <Button 
-                    key={item.id} 
-                    variant="outline" 
-                    size="sm"
-                    onClick={() => cycleItemStatus(item.id)}
-                  >
-                    Change &quot;{item.title}&quot; status
-                  </Button>
-                ))}
-              </div>
+            <CardFooter className="flex justify-end border-t pt-4">
+              <Button 
+                onClick={() => {
+                  const nextItem = items.find(item => item.status !== "verified");
+                  if (nextItem) cycleItemStatus(nextItem.id);
+                }}
+                size="sm"
+              >
+                Cycle Next Status
+              </Button>
             </CardFooter>
           </Card>
+          
+          <div className="text-sm text-muted-foreground">
+            <p>Tip: Click on any checklist item to cycle through its statuses</p>
+          </div>
         </TabsContent>
 
-        <TabsContent value="verification">
-          <div className="w-full max-w-md mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Verification Screen</h2>
-            
-            <VerificationScreenDemo />
-          </div>
+        <TabsContent value="verification" className="w-full max-w-md mx-auto">
+          <Card className="w-full mb-4">
+            <CardHeader className="pb-2">
+              <CardTitle>Verification Screen</CardTitle>
+              <CardDescription>Multi-step verification process</CardDescription>
+            </CardHeader>
+          </Card>
+          
+          <VerificationScreenDemo />
         </TabsContent>
         
-        <TabsContent value="video-recorder">
-          <div className="w-full max-w-md mx-auto">
-            <h2 className="text-2xl font-semibold mb-4">Video Recorder</h2>
-            
-            <VideoRecorderDemo />
-          </div>
+        <TabsContent value="video-recorder" className="w-full max-w-md mx-auto">
+          <Card className="w-full mb-4">
+            <CardHeader className="pb-2">
+              <CardTitle>Video Recorder</CardTitle>
+              <CardDescription>Camera recording interface</CardDescription>
+            </CardHeader>
+          </Card>
+          
+          <VideoRecorderDemo />
         </TabsContent>
       </Tabs>
     </main>

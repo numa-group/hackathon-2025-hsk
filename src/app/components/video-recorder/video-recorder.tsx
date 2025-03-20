@@ -75,6 +75,13 @@ export function VideoRecorder({
     }
   }, [isRecording, processRecording]);
 
+  // Force stop recording when max duration is reached
+  useEffect(() => {
+    if (recordingTime >= maxDuration && isRecording) {
+      stopRecordingAndProcess();
+    }
+  }, [recordingTime, maxDuration, isRecording, stopRecordingAndProcess]);
+
   // Start recording
   const startRecording = useCallback(async () => {
     try {
@@ -116,7 +123,12 @@ export function VideoRecorder({
           const newTime = prev + 1;
           // Auto-stop if max duration reached
           if (newTime >= maxDuration) {
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+              timerRef.current = null;
+            }
             stopRecordingAndProcess();
+            return maxDuration; // Cap at max duration
           }
           return newTime;
         });
