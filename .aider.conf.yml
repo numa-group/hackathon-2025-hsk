@@ -367,7 +367,7 @@ test-cmd: pnpm lint
 read:
   - CONVENTIONS.md
 ## Use VI editing mode in the terminal (default: False)
-#vim: false
+vim: false
 
 ## Specify the language to use in the chat (default: None, uses system settings)
 #chat-language: xxx
@@ -400,8 +400,7 @@ read:
 #fancy-input: true
 
 ## Enable/disable multi-line input mode with Meta-Enter to submit (default: False)
-#multiline: false
-
+multiline: false
 ## Enable/disable terminal bell notifications when LLM responses are ready (default: False)
 #notifications: false
 
