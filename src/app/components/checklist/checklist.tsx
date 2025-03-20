@@ -12,17 +12,17 @@ export const Checklist = ({
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "verified":
-        return <CheckCircle className="h-5 w-5 text-green-500" />;
+        return <CheckCircle className="h-5 w-5 text-green-500 transition-colors duration-500" />;
       case "declined":
-        return <XCircle className="h-5 w-5 text-red-500" />;
+        return <XCircle className="h-5 w-5 text-red-500 transition-colors duration-500" />;
       default:
-        return <Circle className="h-5 w-5 text-gray-300" />;
+        return <Circle className="h-5 w-5 text-gray-300 transition-colors duration-500" />;
     }
   };
 
   const getItemClassName = (status: string) => {
     return cn(
-      "flex items-start gap-3 p-4 rounded-lg border",
+      "flex items-start gap-3 p-4 rounded-lg border transition-colors duration-500",
       status === "verified" && "bg-green-950/30 border-green-800",
       status === "declined" && "bg-red-950/30 border-red-800",
       status === "unverified" && "bg-gray-800/30 border-gray-700",
@@ -58,10 +58,10 @@ export const Checklist = ({
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, height: 0, marginTop: 0 }}
               transition={{
-                type: "spring",
-                stiffness: 500,
-                damping: 30,
-                opacity: { duration: 0.2 },
+                type: "tween",
+                ease: "easeInOut",
+                duration: 0.5,
+                opacity: { duration: 0.3 },
               }}
               className={getItemClassName(item.status)}
             >
@@ -69,7 +69,11 @@ export const Checklist = ({
                 className="mt-0.5"
                 initial={{ scale: 0.8 }}
                 animate={{ scale: 1 }}
-                transition={{ type: "spring", stiffness: 500 }}
+                transition={{ 
+                  type: "tween", 
+                  ease: "easeInOut", 
+                  duration: 0.4 
+                }}
               >
                 {getStatusIcon(item.status)}
               </motion.div>
