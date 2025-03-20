@@ -3,11 +3,118 @@
 import { useState, useCallback } from "react";
 import { VerificationScreen, VerificationScreenState } from "./verification-screen";
 import { Checklist, ChecklistItem } from "./checklist";
+import { VideoRecorder, RecordedVideoData } from "./video-recorder";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
 import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { demoChecklistItems, checklistVariants } from "./constants";
+
+// Video Recorder Demo Component
+const VideoRecorderDemo = () => {
+  const [isRecording, setIsRecording] = useState(false);
+  const [recordedVideo, setRecordedVideo] = useState<RecordedVideoData | null>(null);
+  const [maxDuration, setMaxDuration] = useState(30);
+
+  const handleStartRecording = () => {
+    setIsRecording(true);
+  };
+
+  const handleVideoRecorded = (videoData: RecordedVideoData) => {
+    console.log("Video recorded:", videoData);
+    setRecordedVideo(videoData);
+    setIsRecording(false);
+  };
+
+  const handleCancel = () => {
+    console.log("Recording cancelled");
+    setIsRecording(false);
+  };
+
+  const handleDurationChange = (value: string) => {
+    setMaxDuration(parseInt(value, 10));
+  };
+
+  return (
+    <div className="space-y-4">
+      <Card>
+        <CardHeader>
+          <CardTitle>Video Recorder</CardTitle>
+          <CardDescription>
+            Record a video with your camera
+          </CardDescription>
+        </CardHeader>
+        <CardContent>
+          {!isRecording ? (
+            <div className="flex flex-col gap-4">
+              <div className="flex justify-between items-center">
+                <div>
+                  <h3 className="text-sm font-medium">Max Duration</h3>
+                  <p className="text-xs text-muted-foreground">
+                    Set the maximum recording duration in seconds
+                  </p>
+                </div>
+                <Select 
+                  value={maxDuration.toString()} 
+                  onValueChange={handleDurationChange}
+                >
+                  <SelectTrigger className="w-[100px]">
+                    <SelectValue placeholder="Duration" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="10">10 sec</SelectItem>
+                    <SelectItem value="30">30 sec</SelectItem>
+                    <SelectItem value="60">60 sec</SelectItem>
+                    <SelectItem value="120">2 min</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              
+              <Button onClick={handleStartRecording}>
+                Start Recording
+              </Button>
+              
+              {recordedVideo && (
+                <div className="mt-4 p-4 border rounded-lg">
+                  <h3 className="font-medium mb-2">Last Recorded Video</h3>
+                  <div className="space-y-2 text-sm">
+                    <p><span className="font-medium">Duration:</span> {recordedVideo.duration} seconds</p>
+                    <p><span className="font-medium">Type:</span> {recordedVideo.mimeType}</p>
+                    <p><span className="font-medium">Size:</span> {Math.round(recordedVideo.file.size / 1024)} KB</p>
+                    <div className="mt-4">
+                      <video 
+                        src={recordedVideo.url} 
+                        controls 
+                        className="w-full h-auto rounded-md"
+                        playsInline
+                        autoPlay={true}
+                        muted={false}
+                        key={recordedVideo.url} // Add key to force re-render when URL changes
+                      />
+                    </div>
+                  </div>
+                  <div className="mt-4">
+                    <Button variant="outline" onClick={() => setRecordedVideo(null)}>
+                      Record Again
+                    </Button>
+                  </div>
+                </div>
+              )}
+            </div>
+          ) : (
+            <div className="h-[400px] bg-black rounded-lg overflow-hidden">
+              <VideoRecorder 
+                onDone={handleVideoRecorded}
+                onCancel={handleCancel}
+                maxDuration={maxDuration}
+              />
+            </div>
+          )}
+        </CardContent>
+      </Card>
+    </div>
+  );
+};
 
 // Verification Screen Demo Component
 const VerificationScreenDemo = () => {
@@ -94,7 +201,7 @@ const VerificationScreenDemo = () => {
 };
 
 export default function ComponentsPage() {
-  const [, setSelectedComponent] = useState("checklist");
+  const [selectedComponent, setSelectedComponent] = useState("checklist");
   const [checklistVariant, setChecklistVariant] = useState("mixed");
   const [items, setItems] = useState<ChecklistItem[]>(
     checklistVariants[checklistVariant as keyof typeof checklistVariants]
@@ -132,10 +239,12 @@ export default function ComponentsPage() {
         defaultValue="checklist" 
         className="w-full max-w-3xl"
         onValueChange={setSelectedComponent}
+        value={selectedComponent}
       >
         <TabsList className="mb-8">
           <TabsTrigger value="checklist">Checklist</TabsTrigger>
           <TabsTrigger value="verification">Verification Screen</TabsTrigger>
+          <TabsTrigger value="video-recorder">Video Recorder</TabsTrigger>
         </TabsList>
         
         <TabsContent value="checklist" className="space-y-6">
@@ -192,6 +301,14 @@ export default function ComponentsPage() {
             <h2 className="text-2xl font-semibold mb-4">Verification Screen</h2>
             
             <VerificationScreenDemo />
+          </div>
+        </TabsContent>
+        
+        <TabsContent value="video-recorder">
+          <div className="w-full max-w-md mx-auto">
+            <h2 className="text-2xl font-semibold mb-4">Video Recorder</h2>
+            
+            <VideoRecorderDemo />
           </div>
         </TabsContent>
       </Tabs>
