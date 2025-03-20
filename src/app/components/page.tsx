@@ -115,13 +115,49 @@ export default function ComponentsPage() {
         <TabsContent value="verification">
           <div className="w-full max-w-md mx-auto">
             <h2 className="text-2xl font-semibold mb-4">Verification Screen</h2>
-            <VerificationScreen
-              title="Video Verification"
-              description="Complete the verification process by recording a short video"
-              checklistItems={demoChecklistItems}
-              onRecordClick={handleRecordClick}
-              isLoading={isLoading}
-            />
+            
+            <Tabs defaultValue="initial" className="mb-8">
+              <TabsList>
+                <TabsTrigger value="initial">Initial State</TabsTrigger>
+                <TabsTrigger value="update">Update State</TabsTrigger>
+                <TabsTrigger value="success">Success State</TabsTrigger>
+              </TabsList>
+              
+              <TabsContent value="initial">
+                <VerificationScreen
+                  title="Video Verification"
+                  description="Complete the verification process by recording a short video"
+                  checklistItems={demoChecklistItems}
+                  onRecordClick={handleRecordClick}
+                  isLoading={isLoading}
+                  state="initial"
+                />
+              </TabsContent>
+              
+              <TabsContent value="update">
+                <VerificationScreen
+                  title="Continue Verification"
+                  description="Review your verification status and continue the process"
+                  checklistItems={checklistVariants.mixed}
+                  onRecordClick={handleRecordClick}
+                  onContinueClick={handleRecordClick}
+                  isLoading={isLoading}
+                  state="update"
+                />
+              </TabsContent>
+              
+              <TabsContent value="success">
+                <VerificationScreen
+                  title="Verification Complete"
+                  description="All items have been successfully verified"
+                  checklistItems={checklistVariants.allVerified}
+                  onRecordClick={handleRecordClick}
+                  isLoading={isLoading}
+                  state="success"
+                  successMessage="Congratulations! Your identity has been successfully verified."
+                />
+              </TabsContent>
+            </Tabs>
           </div>
         </TabsContent>
       </Tabs>
