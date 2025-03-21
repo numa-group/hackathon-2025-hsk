@@ -1,7 +1,6 @@
-export type ChecklistItemStatus = 'unverified' | 'verified' | 'declined';
+export type ChecklistItemStatus = "unverified" | "verified" | "declined";
 
 export interface ChecklistItem {
-  id: string;
   title: string;
   description?: string;
   status: ChecklistItemStatus;

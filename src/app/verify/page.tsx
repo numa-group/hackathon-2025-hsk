@@ -1,5 +1,6 @@
 "use client";
 import { useState } from "react";
+import { processVideoVerification } from "./actions";
 import {
   VerificationScreen,
   VerificationScreenState,
@@ -9,85 +10,23 @@ import { ChecklistItem } from "../components/checklist";
 
 // Mock data - initial checklist items
 const initialChecklistItems: ChecklistItem[] = [
-  // {
-  //   id: "1",
-  //   title: "Valid ID Document",
-  //   description: "Show the front and back of your government-issued ID",
-  //   status: "unverified",
-  // },
-  // {
-  //   id: "2",
-  //   title: "Valid ID Document",
-  //   description: "Show the front and back of your government-issued ID",
-  //   status: "unverified",
-  // },
-  // {
-  //   id: "3",
-  //   title: "Valid ID Document",
-  //   description: "Show the front and back of your government-issued ID",
-  //   status: "unverified",
-  // },
-  // {
-  //   id: "4",
-  //   title: "Valid ID Document",
-  //   description: "Show the front and back of your government-issued ID",
-  //   status: "unverified",
-  // },
-  // {
-  //   id: "5",
-  //   title: "Valid ID Document",
-  //   description: "Show the front and back of your government-issued ID",
-  //   status: "unverified",
-  // },
   {
-    id: "6",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
+    title: "A kindle should not be present on table.",
     status: "unverified",
   },
   {
-    id: "7",
-    title: "Face Verification",
-    description: "Record a clear video of your face",
+    title: "A bottle should be present on table.",
     status: "unverified",
   },
   {
-    id: "8",
-    title: "Proof of Address",
-    description: "Show a utility bill or bank statement with your address",
+    title: "A mobile phone should be present on table.",
+    status: "unverified",
+  },
+  {
+    title: "Laptop should be present on table",
     status: "unverified",
   },
 ];
-
-// Dummy API function to simulate video processing
-const processVideo = async (
-  videoData: RecordedVideoData,
-  currentItems: ChecklistItem[],
-  attemptCount: number,
-): Promise<ChecklistItem[]> => {
-  // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 1000));
-
-  // Clone the current items to avoid mutating the original
-  const updatedItems = [...currentItems];
-
-  if (attemptCount === 1) {
-    // First attempt: Verify the first item, decline the second
-    updatedItems[0].status = "verified";
-    updatedItems[1].status = "declined";
-  } else if (attemptCount === 2) {
-    // Second attempt: Verify the first two items
-    updatedItems[0].status = "verified";
-    updatedItems[1].status = "verified";
-  } else {
-    // Third attempt: Verify all items
-    updatedItems.forEach((item) => {
-      item.status = "verified";
-    });
-  }
-
-  return updatedItems;
-};
 
 // Check if all items are verified
 const areAllItemsVerified = (items: ChecklistItem[]): boolean => {
@@ -121,25 +60,105 @@ export default function VerifyPage() {
     setAttemptCount(newAttemptCount);
 
     try {
-      // Process the video with our dummy API
-      const updatedItems = await processVideo(
-        videoData,
-        checklistItems,
-        newAttemptCount,
+      console.log(
+        "Processing video recording:",
+        videoData.file.name,
+        "Type:",
+        videoData.mimeType,
       );
-      setChecklistItems(updatedItems);
 
-      // Check if all items are verified
-      if (areAllItemsVerified(updatedItems)) {
-        setScreenState("success");
-      } else {
-        setScreenState("update");
+      try {
+        // Convert the file to base64
+        const base64Data = await fileToBase64(videoData.file);
+        console.log("Base64 conversion successful");
+
+        // Use our server action to process the video
+        const updatedItems = await processVideoVerification(
+          base64Data,
+          videoData.mimeType,
+          checklistItems,
+        );
+
+        console.log(
+          "Video processing complete, updating checklist items",
+          updatedItems,
+        );
+        setChecklistItems(updatedItems);
+
+        // Check if all items are verified
+        if (areAllItemsVerified(updatedItems)) {
+          setScreenState("success");
+        } else {
+          setScreenState("update");
+        }
+      } catch (conversionError) {
+        console.error("Error converting video to base64:", conversionError);
+        throw new Error(`Failed to convert video: ${conversionError.message}`);
       }
     } catch (error) {
       console.error("Error processing video:", error);
+      // You might want to show an error message to the user here
+      // For now, we'll just update the screen state to show there was an error
+      setScreenState("update");
+
+      // In a real app, you would show this error to the user
+      alert(`Error processing video: ${error.message}`);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  // Helper function to convert File to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        try {
+          const result = reader.result;
+          if (typeof result !== "string") {
+            reject(new Error("FileReader result is not a string"));
+            return;
+          }
+
+          console.log("File read complete, data URL length:", result.length);
+
+          // Safely extract the base64 data part
+          // Data URLs are formatted as: data:[<mediatype>][;base64],<data>
+          const base64Match = result.match(/^data:.*;base64,(.*)$/);
+          if (!base64Match) {
+            console.error(
+              "Could not extract base64 data from:",
+              result.substring(0, 100) + "...",
+            );
+            reject(new Error("Invalid data URL format"));
+            return;
+          }
+
+          const base64Data = base64Match[1];
+          console.log("Extracted base64 data length:", base64Data.length);
+
+          resolve(base64Data);
+        } catch (error) {
+          console.error("Error in fileToBase64:", error);
+          reject(error);
+        }
+      };
+      reader.onerror = (error) => {
+        console.error("FileReader error:", error);
+        reject(error);
+      };
+
+      // Log file details before reading
+      console.log(
+        "Reading file:",
+        file.name,
+        "Size:",
+        file.size,
+        "Type:",
+        file.type,
+      );
+      reader.readAsDataURL(file);
+    });
   };
 
   const handleContinueClick = () => {

@@ -5,7 +5,6 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
-import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checklist } from "../checklist";
 import { VerificationScreenProps } from "./types";
 import { Video, ArrowRight, CheckCircle } from "lucide-react";

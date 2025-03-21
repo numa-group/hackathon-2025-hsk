@@ -45,7 +45,7 @@ export const Checklist = ({ items }: ChecklistProps) => {
         <AnimatePresence initial={false}>
           {sortedItems.map((item) => (
             <motion.div
-              key={item.id}
+              key={item.title}
               layout
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}

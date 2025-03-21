@@ -1,19 +1,37 @@
 "use client";
 
 import { useState, useCallback } from "react";
-import { VerificationScreen, VerificationScreenState } from "./verification-screen";
+import {
+  VerificationScreen,
+  VerificationScreenState,
+} from "./verification-screen";
 import { Checklist, ChecklistItem } from "./checklist";
 import { VideoRecorder, RecordedVideoData } from "./video-recorder";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card";
-import { Select, SelectTrigger, SelectValue, SelectContent, SelectItem } from "@/components/ui/select";
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from "@/components/ui/card";
+import {
+  Select,
+  SelectTrigger,
+  SelectValue,
+  SelectContent,
+  SelectItem,
+} from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
 import { demoChecklistItems, checklistVariants } from "./constants";
 
 // Video Recorder Demo Component
 const VideoRecorderDemo = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedVideo, setRecordedVideo] = useState<RecordedVideoData | null>(null);
+  const [recordedVideo, setRecordedVideo] = useState<RecordedVideoData | null>(
+    null,
+  );
   const [maxDuration, setMaxDuration] = useState(30);
 
   const handleStartRecording = () => {
@@ -43,8 +61,8 @@ const VideoRecorderDemo = () => {
             <div className="flex flex-col gap-4">
               <div className="flex justify-between items-center mb-4">
                 <div className="flex items-center gap-2">
-                  <Select 
-                    value={maxDuration.toString()} 
+                  <Select
+                    value={maxDuration.toString()}
                     onValueChange={handleDurationChange}
                   >
                     <SelectTrigger className="w-[100px]">
@@ -57,25 +75,34 @@ const VideoRecorderDemo = () => {
                       <SelectItem value="120">2 min</SelectItem>
                     </SelectContent>
                   </Select>
-                  <span className="text-xs text-muted-foreground">Max duration</span>
+                  <span className="text-xs text-muted-foreground">
+                    Max duration
+                  </span>
                 </div>
               </div>
-              
-              <Button onClick={handleStartRecording}>
-                Start Recording
-              </Button>
-              
+
+              <Button onClick={handleStartRecording}>Start Recording</Button>
+
               {recordedVideo && (
                 <div className="mt-4 p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">Last Recorded Video</h3>
                   <div className="space-y-2 text-sm">
-                    <p><span className="font-medium">Duration:</span> {recordedVideo.duration} seconds</p>
-                    <p><span className="font-medium">Type:</span> {recordedVideo.mimeType}</p>
-                    <p><span className="font-medium">Size:</span> {Math.round(recordedVideo.file.size / 1024)} KB</p>
+                    <p>
+                      <span className="font-medium">Duration:</span>{" "}
+                      {recordedVideo.duration} seconds
+                    </p>
+                    <p>
+                      <span className="font-medium">Type:</span>{" "}
+                      {recordedVideo.mimeType}
+                    </p>
+                    <p>
+                      <span className="font-medium">Size:</span>{" "}
+                      {Math.round(recordedVideo.file.size / 1024)} KB
+                    </p>
                     <div className="mt-4">
-                      <video 
-                        src={recordedVideo.url} 
-                        controls 
+                      <video
+                        src={recordedVideo.url}
+                        controls
                         className="w-full h-auto rounded-md"
                         playsInline
                         autoPlay={true}
@@ -85,7 +112,10 @@ const VideoRecorderDemo = () => {
                     </div>
                   </div>
                   <div className="mt-4">
-                    <Button variant="outline" onClick={() => setRecordedVideo(null)}>
+                    <Button
+                      variant="outline"
+                      onClick={() => setRecordedVideo(null)}
+                    >
                       Record Again
                     </Button>
                   </div>
@@ -94,7 +124,7 @@ const VideoRecorderDemo = () => {
             </div>
           ) : (
             <div className="h-[400px] bg-black rounded-lg overflow-hidden">
-              <VideoRecorder 
+              <VideoRecorder
                 onDone={handleVideoRecorded}
                 onCancel={handleCancel}
                 maxDuration={maxDuration}
@@ -112,45 +142,43 @@ const VerificationScreenDemo = () => {
   const [state, setState] = useState<VerificationScreenState>("initial");
   const [isLoading, setIsLoading] = useState(false);
   const [items, setItems] = useState<ChecklistItem[]>(demoChecklistItems);
-  
+
   // Handle record button click
   const handleRecordClick = () => {
     setIsLoading(true);
-    
+
     // Simulate loading and transition to update state
     setTimeout(() => {
       setIsLoading(false);
       setState("update");
       // Update some items to verified status
-      setItems(prev => 
-        prev.map((item, index) => 
-          index < 2 ? { ...item, status: "verified" } : item
-        )
+      setItems((prev) =>
+        prev.map((item, index) =>
+          index < 2 ? { ...item, status: "verified" } : item,
+        ),
       );
     }, 1500);
   };
-  
+
   // Handle continue button click
   const handleContinueClick = () => {
     setIsLoading(true);
-    
+
     // Simulate loading and transition to success state
     setTimeout(() => {
       setIsLoading(false);
       // Mark all items as verified
-      setItems(prev => 
-        prev.map(item => ({ ...item, status: "verified" }))
-      );
+      setItems((prev) => prev.map((item) => ({ ...item, status: "verified" })));
       setState("success");
     }, 1500);
   };
-  
+
   // Reset demo
   const handleReset = () => {
     setState("initial");
     setItems(demoChecklistItems);
   };
-  
+
   return (
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-4">
@@ -163,13 +191,13 @@ const VerificationScreenDemo = () => {
           Reset
         </Button>
       </div>
-      
+
       <VerificationScreen
         title={
-          state === "initial" 
-            ? "Video Verification" 
-            : state === "update" 
-              ? "Continue Verification" 
+          state === "initial"
+            ? "Video Verification"
+            : state === "update"
+              ? "Continue Verification"
               : "Verification Complete"
         }
         description={
@@ -184,7 +212,6 @@ const VerificationScreenDemo = () => {
         onContinueClick={handleContinueClick}
         isLoading={isLoading}
         state={state}
-        successMessage="Congratulations! Your identity has been successfully verified."
       />
     </div>
   );
@@ -194,7 +221,7 @@ export default function ComponentsPage() {
   const [selectedComponent, setSelectedComponent] = useState("checklist");
   const [checklistVariant, setChecklistVariant] = useState("mixed");
   const [items, setItems] = useState<ChecklistItem[]>(
-    checklistVariants[checklistVariant as keyof typeof checklistVariants]
+    checklistVariants[checklistVariant as keyof typeof checklistVariants],
   );
 
   // Update items when variant changes
@@ -204,29 +231,31 @@ export default function ComponentsPage() {
   };
 
   // Cycle through statuses: unverified -> verified -> declined -> unverified
-  const cycleItemStatus = useCallback((id: string) => {
-    setItems(currentItems => 
-      currentItems.map(item => {
-        if (item.id === id) {
-          const statusMap: Record<string, ChecklistItem['status']> = {
-            'unverified': 'verified',
-            'verified': 'declined',
-            'declined': 'unverified'
+  const cycleItemStatus = useCallback((title: string) => {
+    setItems((currentItems) =>
+      currentItems.map((item) => {
+        if (item.title === title) {
+          const statusMap: Record<string, ChecklistItem["status"]> = {
+            unverified: "verified",
+            verified: "declined",
+            declined: "unverified",
           };
           return { ...item, status: statusMap[item.status] };
         }
         return item;
-      })
+      }),
     );
   }, []);
 
   return (
     <main className="flex min-h-screen flex-col items-center p-8">
       <h1 className="text-3xl font-bold mb-4">Components</h1>
-      <p className="text-muted-foreground mb-8">Interactive showcase of our application components</p>
-      
-      <Tabs 
-        defaultValue="checklist" 
+      <p className="text-muted-foreground mb-8">
+        Interactive showcase of our application components
+      </p>
+
+      <Tabs
+        defaultValue="checklist"
         className="w-full max-w-3xl"
         onValueChange={setSelectedComponent}
         value={selectedComponent}
@@ -236,15 +265,23 @@ export default function ComponentsPage() {
           <TabsTrigger value="verification">Verification Screen</TabsTrigger>
           <TabsTrigger value="video-recorder">Video Recorder</TabsTrigger>
         </TabsList>
-        
-        <TabsContent value="checklist" className="space-y-6 w-full max-w-md mx-auto">
+
+        <TabsContent
+          value="checklist"
+          className="space-y-6 w-full max-w-md mx-auto"
+        >
           <Card className="w-full">
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
               <div>
                 <CardTitle>Checklist</CardTitle>
-                <CardDescription>Verification status indicators</CardDescription>
+                <CardDescription>
+                  Verification status indicators
+                </CardDescription>
               </div>
-              <Select value={checklistVariant} onValueChange={handleVariantChange}>
+              <Select
+                value={checklistVariant}
+                onValueChange={handleVariantChange}
+              >
                 <SelectTrigger className="w-[130px]">
                   <SelectValue placeholder="Variant" />
                 </SelectTrigger>
@@ -255,19 +292,21 @@ export default function ComponentsPage() {
                 </SelectContent>
               </Select>
             </CardHeader>
-          
+
             <CardContent className="pt-6">
-              <Checklist 
-                items={items} 
+              <Checklist
+                items={items}
                 title="Verification Checklist"
                 description="The following items need to be verified through video recording"
               />
             </CardContent>
             <CardFooter className="flex justify-end border-t pt-4">
-              <Button 
+              <Button
                 onClick={() => {
-                  const nextItem = items.find(item => item.status !== "verified");
-                  if (nextItem) cycleItemStatus(nextItem.id);
+                  const nextItem = items.find(
+                    (item) => item.status !== "verified",
+                  );
+                  if (nextItem) cycleItemStatus(nextItem.title);
                 }}
                 size="sm"
               >
@@ -275,9 +314,11 @@ export default function ComponentsPage() {
               </Button>
             </CardFooter>
           </Card>
-          
+
           <div className="text-sm text-muted-foreground">
-            <p>Tip: Click on any checklist item to cycle through its statuses</p>
+            <p>
+              Tip: Click on any checklist item to cycle through its statuses
+            </p>
           </div>
         </TabsContent>
 
@@ -288,10 +329,10 @@ export default function ComponentsPage() {
               <CardDescription>Multi-step verification process</CardDescription>
             </CardHeader>
           </Card>
-          
+
           <VerificationScreenDemo />
         </TabsContent>
-        
+
         <TabsContent value="video-recorder" className="w-full max-w-md mx-auto">
           <Card className="w-full mb-4">
             <CardHeader className="pb-2">
@@ -299,7 +340,7 @@ export default function ComponentsPage() {
               <CardDescription>Camera recording interface</CardDescription>
             </CardHeader>
           </Card>
-          
+
           <VideoRecorderDemo />
         </TabsContent>
       </Tabs>

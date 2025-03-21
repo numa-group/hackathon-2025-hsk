@@ -71,7 +71,7 @@ const model = genAI.getGenerativeModel({
         },
       },
       required: ["verification_results"],
-    } as any,
+    },
   },
 });
 
