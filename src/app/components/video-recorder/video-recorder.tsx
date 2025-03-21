@@ -88,9 +88,16 @@ export function VideoRecorder({
       chunksRef.current = [];
       setError(null);
       
-      // Get user media
+      // Check if mediaDevices API is available
+      if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+        throw new Error("Camera access is not supported in your browser or environment. Please ensure you're using HTTPS and have granted camera permissions.");
+      }
+      
+      // Get user media - use rear camera on mobile devices
       const stream = await navigator.mediaDevices.getUserMedia({
-        video: true,
+        video: {
+          facingMode: { ideal: "environment" } // Use rear camera when available
+        },
         audio: true,
       });
       
