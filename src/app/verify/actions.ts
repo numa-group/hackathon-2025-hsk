@@ -91,9 +91,9 @@ You are a precise video analysis assistant. Your task is to analyze the uploaded
 IMPORTANT: Do not add additional checklist items beyond what I've specified. Focus solely on verifying the exact items I've requested.
 
 For each checklist item, provide a verification status using the following format:
-- VERIFIED: The item/condition is clearly visible and matches the description
-- NOT PRESENT: The item/condition is definitely not in the video
-- UNCERTAIN: Cannot determine with confidence (provide specific reason - e.g., "poor lighting," "object partially visible," "camera angle limited")
+- verified: The item/condition is clearly visible and matches the description
+- declined: The item/condition is definitely not in the video
+- unverified: Cannot determine with confidence (provide specific reason - e.g., "poor lighting," "object partially visible," "camera angle limited")
 
 CHECKLIST:
 ${JSON.stringify(checklistForPrompt, null, 2)}
@@ -107,26 +107,9 @@ The "additional_observations" field is for any notable items that were not part 
 
     // Parse the response
     const responseText = result.response.text();
-    console.log("RESPONSE TEXT: ", responseText);
     const response: VerificationResponse = JSON.parse(responseText);
 
-    // Map the verification results back to the checklist items
-    const updatedItems = [...checklistItems];
-
-    for (const item of updatedItems) {
-      const verificationResult = response.checklistItems.find(
-        (result) => result.title === item.title,
-      );
-
-      if (verificationResult) {
-        item.status = verificationResult.status;
-      }
-    }
-
-    return {
-      ...response,
-      checklistItems: updatedItems,
-    };
+    return response;
   } catch (error) {
     console.error("Error processing video with Gemini:", error);
     throw error;

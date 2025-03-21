@@ -26,6 +26,10 @@ const initialChecklistItems: ChecklistItem[] = [
     title: "Laptop should be present on table",
     status: "unverified",
   },
+  {
+    title: "A man holding a bottle.",
+    status: "unverified",
+  },
 ];
 
 // Check if all items are verified
