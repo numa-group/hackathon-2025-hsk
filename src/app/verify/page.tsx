@@ -73,11 +73,14 @@ export default function VerifyPage() {
         console.log("Base64 conversion successful");
 
         // Use our server action to process the video
-        const updatedItems = await processVideoVerification(
+        const response = await processVideoVerification(
           base64Data,
           videoData.mimeType,
           checklistItems,
         );
+
+        console.log("AI RESPONSE: ", response);
+        const { checklistItems: updatedItems } = response;
 
         console.log(
           "Video processing complete, updating checklist items",

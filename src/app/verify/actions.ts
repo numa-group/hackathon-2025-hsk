@@ -15,7 +15,7 @@ export async function processVideoVerification(
   videoData: string, // Base64 encoded video data
   mimeType: string, // MIME type of the video
   checklistItems: ChecklistItem[],
-): Promise<ChecklistItem[]> {
+): Promise<VerificationResponse> {
   try {
     const genAI = new GoogleGenerativeAI(constants.GEMINI_API_KEY);
 
@@ -123,7 +123,10 @@ The "additional_observations" field is for any notable items that were not part 
       }
     }
 
-    return updatedItems;
+    return {
+      ...response,
+      checklistItems: updatedItems,
+    };
   } catch (error) {
     console.error("Error processing video with Gemini:", error);
     throw error;
