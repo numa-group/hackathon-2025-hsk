@@ -10,6 +10,7 @@ import { Checklist } from "../checklist";
 import { VerificationScreenProps } from "./types";
 import { Video, ArrowRight, CheckCircle } from "lucide-react";
 import { useMemo } from "react";
+import { VerificationStatus, calculateVerificationStats } from "./status";
 
 export const VerificationScreen = ({
   title,
@@ -20,10 +21,13 @@ export const VerificationScreen = ({
   isLoading = false,
   state = "initial",
 }: VerificationScreenProps) => {
+  // Calculate verification stats for determining if all items are verified
+  const stats = useMemo(() => calculateVerificationStats(checklistItems), [checklistItems]);
+  
   // Check if all items are verified
   const allVerified = useMemo(() => {
-    return checklistItems.every((item) => item.status === "verified");
-  }, [checklistItems]);
+    return stats.verified === stats.total;
+  }, [stats]);
 
   // If state is 'success' or (state is 'update' and all items are verified)
   const showSuccessState =
@@ -54,6 +58,10 @@ export const VerificationScreen = ({
                 All verification requirements have been met
               </p>
             </div>
+          )}
+
+          {!showSuccessState && (
+            <VerificationStatus checklistItems={checklistItems} />
           )}
 
           <div className="transition-all duration-300 ease-in-out">

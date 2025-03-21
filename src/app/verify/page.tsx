@@ -5,40 +5,40 @@ import {
   VerificationScreenState,
 } from "../components/verification-screen";
 import { VideoRecorder, RecordedVideoData } from "../components/video-recorder";
-import { ChecklistItem, ChecklistItemStatus } from "../components/checklist";
+import { ChecklistItem } from "../components/checklist";
 
 // Mock data - initial checklist items
 const initialChecklistItems: ChecklistItem[] = [
-  {
-    id: "1",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
-    status: "unverified",
-  },
-  {
-    id: "2",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
-    status: "unverified",
-  },
-  {
-    id: "3",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
-    status: "unverified",
-  },
-  {
-    id: "4",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
-    status: "unverified",
-  },
-  {
-    id: "5",
-    title: "Valid ID Document",
-    description: "Show the front and back of your government-issued ID",
-    status: "unverified",
-  },
+  // {
+  //   id: "1",
+  //   title: "Valid ID Document",
+  //   description: "Show the front and back of your government-issued ID",
+  //   status: "unverified",
+  // },
+  // {
+  //   id: "2",
+  //   title: "Valid ID Document",
+  //   description: "Show the front and back of your government-issued ID",
+  //   status: "unverified",
+  // },
+  // {
+  //   id: "3",
+  //   title: "Valid ID Document",
+  //   description: "Show the front and back of your government-issued ID",
+  //   status: "unverified",
+  // },
+  // {
+  //   id: "4",
+  //   title: "Valid ID Document",
+  //   description: "Show the front and back of your government-issued ID",
+  //   status: "unverified",
+  // },
+  // {
+  //   id: "5",
+  //   title: "Valid ID Document",
+  //   description: "Show the front and back of your government-issued ID",
+  //   status: "unverified",
+  // },
   {
     id: "6",
     title: "Valid ID Document",

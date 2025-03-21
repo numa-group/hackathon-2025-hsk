@@ -40,7 +40,7 @@ function ScrollBar({
       orientation={orientation}
       forceMount
       className={cn(
-        "flex touch-none p-px transition-colors select-none",
+        "flex touch-none p-px transition-colors select-none group",
         orientation === "vertical" &&
           "h-full w-2.5 border-l border-l-transparent",
         orientation === "horizontal" &&
@@ -51,7 +51,7 @@ function ScrollBar({
     >
       <ScrollAreaPrimitive.ScrollAreaThumb
         data-slot="scroll-area-thumb"
-        className="bg-foreground/50 [data-[state='hidden']>&]:bg-foreground/10 transition-colors duration-150 relative flex-1 rounded-full"
+        className="relative flex-1 rounded-full transition-colors duration-300 bg-foreground/50 group-data-[state='hidden']:bg-foreground/10"
       />
     </ScrollAreaPrimitive.ScrollAreaScrollbar>
   );
