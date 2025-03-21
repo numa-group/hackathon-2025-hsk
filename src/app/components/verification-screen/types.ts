@@ -1,6 +1,6 @@
 import { ChecklistItem } from "../checklist/types";
 
-export type VerificationScreenState = 'initial' | 'update' | 'success';
+export type VerificationScreenState = "initial" | "update" | "success";
 
 export interface VerificationScreenProps {
   title: string;
@@ -10,5 +10,4 @@ export interface VerificationScreenProps {
   onContinueClick?: () => void;
   isLoading?: boolean;
   state?: VerificationScreenState;
-  successMessage?: string;
 }

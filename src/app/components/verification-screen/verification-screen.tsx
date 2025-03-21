@@ -5,6 +5,7 @@ import {
   CardFooter,
   CardHeader,
 } from "@/components/ui/card";
+import { ScrollArea } from "@/components/ui/scroll-area";
 import { Checklist } from "../checklist";
 import { VerificationScreenProps } from "./types";
 import { Video, ArrowRight, CheckCircle } from "lucide-react";
@@ -18,7 +19,6 @@ export const VerificationScreen = ({
   onContinueClick,
   isLoading = false,
   state = "initial",
-  successMessage = "Great job! All items have been successfully verified.",
 }: VerificationScreenProps) => {
   // Check if all items are verified
   const allVerified = useMemo(() => {
@@ -57,7 +57,9 @@ export const VerificationScreen = ({
           )}
 
           <div className="transition-all duration-300 ease-in-out">
-            <Checklist items={checklistItems} />
+            <ScrollArea className="h-[500px]">
+              <Checklist items={checklistItems} />
+            </ScrollArea>
           </div>
         </CardContent>
 
