@@ -30,8 +30,9 @@ export function VideoRecorder({
       return;
     }
 
-    // Specify the correct MIME type for better compatibility
-    const mimeType = "video/webm;codecs=vp9,opus";
+    // Use a more compatible MIME type for mobile devices
+    // Some mobile browsers don't support specific codecs in the MIME type
+    const mimeType = "video/webm";
     const blob = new Blob(chunksRef.current, { type: mimeType });
     const url = URL.createObjectURL(blob);
     
@@ -109,8 +110,18 @@ export function VideoRecorder({
         videoRef.current.muted = true; // Mute to prevent feedback
       }
       
-      // Create media recorder
-      const mediaRecorder = new MediaRecorder(stream);
+      // Create media recorder with more compatible options for mobile
+      const options = { mimeType: 'video/webm' };
+      
+      // Try to create with the specified options, fall back to browser defaults if not supported
+      let mediaRecorder;
+      try {
+        mediaRecorder = new MediaRecorder(stream, options);
+      } catch (e) {
+        console.warn("Requested MIME type not supported, using browser defaults", e);
+        mediaRecorder = new MediaRecorder(stream);
+      }
+      
       mediaRecorderRef.current = mediaRecorder;
       
       // Set up event handlers
