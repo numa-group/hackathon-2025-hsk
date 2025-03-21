@@ -68,7 +68,8 @@ export async function processVideoVerification(
           required: ["checklistItems"],
         },
       },
-    });
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } as any);
 
     // Create checklist items for the prompt
     const checklistForPrompt = checklistItems;

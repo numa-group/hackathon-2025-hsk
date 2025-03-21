@@ -91,11 +91,13 @@ export default function VerifyPage() {
         } else {
           setScreenState("update");
         }
-      } catch (conversionError) {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+      } catch (conversionError: any) {
         console.error("Error converting video to base64:", conversionError);
         throw new Error(`Failed to convert video: ${conversionError.message}`);
       }
-    } catch (error) {
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
       console.error("Error processing video:", error);
       // You might want to show an error message to the user here
       // For now, we'll just update the screen state to show there was an error
