@@ -66,7 +66,7 @@ const processVideo = async (
   attemptCount: number,
 ): Promise<ChecklistItem[]> => {
   // Simulate API delay
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+  await new Promise((resolve) => setTimeout(resolve, 1000));
 
   // Clone the current items to avoid mutating the original
   const updatedItems = [...currentItems];

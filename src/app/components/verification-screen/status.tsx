@@ -2,8 +2,10 @@ import { CheckCircle2, XCircle, AlertCircle } from "lucide-react";
 import { useMemo } from "react";
 import { motion, useSpring, useTransform } from "motion/react";
 import { ChecklistItem } from "../checklist/types";
+import { cn } from "@/lib/utils";
 
 interface VerificationStatusProps {
+  className?: string;
   checklistItems: ChecklistItem[];
 }
 
@@ -15,6 +17,7 @@ interface VerificationStats {
 }
 
 export const VerificationStatus = ({
+  className,
   checklistItems,
 }: VerificationStatusProps) => {
   // Calculate verification stats
@@ -43,7 +46,7 @@ export const VerificationStatus = ({
   }, [animatedProgress, progressPercentage]);
 
   return (
-    <div className="mb-4 bg-card border rounded-lg p-3 shadow-sm">
+    <div className={cn("bg-card border rounded-lg p-3 shadow-sm", className)}>
       <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-medium">Verification Status</h3>
         <span className="text-xs text-muted-foreground">

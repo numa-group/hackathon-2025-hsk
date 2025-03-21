@@ -11,7 +11,9 @@ import { VerificationScreenProps } from "./types";
 import { Video, ArrowRight, CheckCircle } from "lucide-react";
 import { useMemo } from "react";
 import { VerificationStatus, calculateVerificationStats } from "./status";
+import { AnimatePresence, motion } from "motion/react";
 
+const CardContentMotion = motion(CardContent);
 export const VerificationScreen = ({
   title,
   description,
@@ -22,8 +24,11 @@ export const VerificationScreen = ({
   state = "initial",
 }: VerificationScreenProps) => {
   // Calculate verification stats for determining if all items are verified
-  const stats = useMemo(() => calculateVerificationStats(checklistItems), [checklistItems]);
-  
+  const stats = useMemo(
+    () => calculateVerificationStats(checklistItems),
+    [checklistItems],
+  );
+
   // Check if all items are verified
   const allVerified = useMemo(() => {
     return stats.verified === stats.total;
@@ -35,41 +40,56 @@ export const VerificationScreen = ({
 
   return (
     <div className="container max-w-md mx-auto py-8">
-      <Card>
-        {!showSuccessState && (
-          <CardHeader>
-            <div className="transition-all duration-300 ease-in-out">
-              <h2 className="text-2xl font-bold">{title}</h2>
-              <p className="text-muted-foreground">{description}</p>
-            </div>
-          </CardHeader>
-        )}
+      <Card className="gap-2">
+        <CardHeader>
+          <AnimatePresence mode="sync">
+            <motion.div>
+              {showSuccessState ? (
+                <motion.div
+                  initial={{ scale: 0, opacity: 0 }}
+                  animate={{
+                    scale: 1,
+                    opacity: 1,
+                    transition: {
+                      duration: 0.3,
+                      scale: {
+                        ease: "easeInOut",
+                      },
+                    },
+                  }}
+                  className="flex flex-col items-center justify-center py-6 transition-all duration-500 ease-in-out"
+                >
+                  {/* Success icon */}
+                  <div className="bg-primary/10 p-6 rounded-full mb-4 transition-all duration-500 ease-in-out">
+                    <CheckCircle className="h-16 w-16 text-primary" />
+                  </div>
 
-        <CardContent>
-          {showSuccessState && (
-            <div className="flex flex-col items-center justify-center py-6 transition-all duration-500 ease-in-out">
-              {/* Success icon */}
-              <div className="bg-primary/10 p-6 rounded-full mb-4 transition-all duration-500 ease-in-out">
-                <CheckCircle className="h-16 w-16 text-primary" />
-              </div>
+                  {/* Success message */}
+                  <p className="text-center text-primary font-medium mb-8 transition-opacity duration-500 ease-in-out">
+                    All verification requirements have been met
+                  </p>
+                </motion.div>
+              ) : (
+                <div className="flex flex-col gap-4">
+                  <div className="transition-all duration-300 ease-in-out flex flex-col gap-2">
+                    <h2 className="text-2xl font-bold">{title}</h2>
+                    <p className="text-muted-foreground">{description}</p>
+                  </div>
 
-              {/* Success message */}
-              <p className="text-center text-primary font-medium mb-8 transition-opacity duration-500 ease-in-out">
-                All verification requirements have been met
-              </p>
-            </div>
-          )}
+                  <VerificationStatus checklistItems={checklistItems} />
+                </div>
+              )}
+            </motion.div>
+          </AnimatePresence>
+        </CardHeader>
 
-          {!showSuccessState && (
-            <VerificationStatus checklistItems={checklistItems} />
-          )}
-
+        <CardContentMotion layout>
           <div className="transition-all duration-300 ease-in-out">
-            <ScrollArea className="h-[500px]">
+            <div className="max-h-[500px] overflow-auto scrollbar">
               <Checklist items={checklistItems} />
-            </ScrollArea>
+            </div>
           </div>
-        </CardContent>
+        </CardContentMotion>
 
         {!showSuccessState && (
           <CardFooter>
