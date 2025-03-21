@@ -176,8 +176,8 @@ export default function VerifyPage() {
           }
           description={
             screenState === "update"
-              ? "Review your verification status and continue if needed"
-              : "Complete the verification process by recording a short video"
+              ? "Review your verification status"
+              : "Get started by recording a video"
           }
           checklistItems={checklistItems}
           onRecordClick={handleRecordClick}
