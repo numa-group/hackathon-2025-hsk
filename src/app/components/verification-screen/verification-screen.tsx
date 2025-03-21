@@ -32,23 +32,14 @@ export const VerificationScreen = ({
   return (
     <div className="container max-w-md mx-auto py-8">
       <Card>
-        <CardHeader>
-          <div className="transition-all duration-300 ease-in-out">
-            {showSuccessState ? (
-              <div className="transition-opacity duration-500 ease-in-out">
-                <h2 className="text-2xl font-bold text-primary">
-                  Verification Complete
-                </h2>
-                <p className="text-muted-foreground">{successMessage}</p>
-              </div>
-            ) : (
-              <>
-                <h2 className="text-2xl font-bold">{title}</h2>
-                <p className="text-muted-foreground">{description}</p>
-              </>
-            )}
-          </div>
-        </CardHeader>
+        {!showSuccessState && (
+          <CardHeader>
+            <div className="transition-all duration-300 ease-in-out">
+              <h2 className="text-2xl font-bold">{title}</h2>
+              <p className="text-muted-foreground">{description}</p>
+            </div>
+          </CardHeader>
+        )}
 
         <CardContent>
           {showSuccessState && (
