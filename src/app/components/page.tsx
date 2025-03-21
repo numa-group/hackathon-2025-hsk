@@ -155,7 +155,7 @@ const VerificationScreenDemo = () => {
     <div className="space-y-4">
       <div className="flex justify-between items-center mb-4">
         <div className="flex items-center gap-2">
-          <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-primary/10 text-primary">
+          <div className="px-2.5 py-0.5 rounded-full text-xs font-medium bg-secondary text-secondary-foreground">
             {state}
           </div>
         </div>

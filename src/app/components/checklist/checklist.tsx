@@ -9,15 +9,15 @@ export const Checklist = ({ items }: ChecklistProps) => {
     switch (status) {
       case "verified":
         return (
-          <CheckCircle className="h-5 w-5 text-green-500 transition-colors duration-500" />
+          <CheckCircle className="h-5 w-5 text-primary transition-colors duration-500" />
         );
       case "declined":
         return (
-          <XCircle className="h-5 w-5 text-red-500 transition-colors duration-500" />
+          <XCircle className="h-5 w-5 text-destructive transition-colors duration-500" />
         );
       default:
         return (
-          <Circle className="h-5 w-5 text-gray-300 transition-colors duration-500" />
+          <Circle className="h-5 w-5 text-muted-foreground transition-colors duration-500" />
         );
     }
   };
@@ -25,9 +25,9 @@ export const Checklist = ({ items }: ChecklistProps) => {
   const getItemClassName = (status: string) => {
     return cn(
       "flex items-start gap-3 p-4 rounded-lg border transition-colors duration-500",
-      status === "verified" && "bg-green-950/30 border-green-800",
-      status === "declined" && "bg-red-950/30 border-red-800",
-      status === "unverified" && "bg-gray-800/30 border-gray-700",
+      status === "verified" && "bg-primary/10 border-primary",
+      status === "declined" && "bg-destructive/10 border-destructive",
+      status === "unverified" && "bg-muted border-border",
     );
   };
 

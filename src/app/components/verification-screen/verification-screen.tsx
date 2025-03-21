@@ -36,7 +36,7 @@ export const VerificationScreen = ({
           <div className="transition-all duration-300 ease-in-out">
             {showSuccessState ? (
               <div className="transition-opacity duration-500 ease-in-out">
-                <h2 className="text-2xl font-bold text-green-500">
+                <h2 className="text-2xl font-bold text-primary">
                   Verification Complete
                 </h2>
                 <p className="text-muted-foreground">{successMessage}</p>
@@ -54,12 +54,12 @@ export const VerificationScreen = ({
           {showSuccessState && (
             <div className="flex flex-col items-center justify-center py-6 transition-all duration-500 ease-in-out">
               {/* Success icon */}
-              <div className="bg-green-900/20 p-6 rounded-full mb-4 transition-all duration-500 ease-in-out">
-                <CheckCircle className="h-16 w-16 text-green-500" />
+              <div className="bg-primary/10 p-6 rounded-full mb-4 transition-all duration-500 ease-in-out">
+                <CheckCircle className="h-16 w-16 text-primary" />
               </div>
 
               {/* Success message */}
-              <p className="text-center text-green-500 font-medium mb-8 transition-opacity duration-500 ease-in-out">
+              <p className="text-center text-primary font-medium mb-8 transition-opacity duration-500 ease-in-out">
                 All verification requirements have been met
               </p>
             </div>

@@ -202,7 +202,7 @@ export function VideoRecorder({
         <motion.div
           initial={{ opacity: 0, y: -10 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-4 p-3 bg-red-100 text-red-800 rounded-md w-full"
+          className="mb-4 p-3 bg-destructive/10 text-destructive rounded-md w-full"
         >
           {error}
         </motion.div>
@@ -211,7 +211,7 @@ export function VideoRecorder({
       <div 
         className={cn(
           "relative rounded-lg overflow-hidden bg-black flex-1",
-          isRecording && "ring-2 ring-red-500"
+          isRecording && "ring-2 ring-destructive"
         )}
         style={{ width, height }}
       >
@@ -228,7 +228,7 @@ export function VideoRecorder({
           <motion.div
             animate={{ opacity: [1, 0.5, 1] }}
             transition={{ repeat: Infinity, duration: 1.5 }}
-            className="w-3 h-3 rounded-full bg-red-500"
+            className="w-3 h-3 rounded-full bg-destructive"
           />
           <span className="text-sm font-medium">
             Recording {formatTime(recordingTime)}
