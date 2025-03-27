@@ -30,9 +30,8 @@ import { demoChecklistItems, checklistVariants } from "./constants";
 // New Video Recorder Demo Component
 const VideoRecorderNewDemo = () => {
   const [isRecording, setIsRecording] = useState(false);
-  const [recordedVideo, setRecordedVideo] = useState<RecordedVideoDataNew | null>(
-    null,
-  );
+  const [recordedVideo, setRecordedVideo] =
+    useState<RecordedVideoDataNew | null>(null);
   const [maxDuration, setMaxDuration] = useState(30);
 
   const handleStartRecording = () => {
@@ -87,31 +86,7 @@ const VideoRecorderNewDemo = () => {
               {recordedVideo && (
                 <div className="mt-4 p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">Last Recorded Video</h3>
-                  <div className="space-y-2 text-sm">
-                    <p>
-                      <span className="font-medium">Duration:</span>{" "}
-                      {recordedVideo.duration} seconds
-                    </p>
-                    <p>
-                      <span className="font-medium">Type:</span>{" "}
-                      {recordedVideo.mimeType}
-                    </p>
-                    <p>
-                      <span className="font-medium">Size:</span>{" "}
-                      {Math.round(recordedVideo.file.size / 1024)} KB
-                    </p>
-                    <div className="mt-4">
-                      <video
-                        src={recordedVideo.url}
-                        controls
-                        className="w-full h-auto rounded-md"
-                        playsInline
-                        autoPlay={true}
-                        muted={false}
-                        key={recordedVideo.url}
-                      />
-                    </div>
-                  </div>
+                  <video src={recordedVideo.url} controls />
                   <div className="mt-4">
                     <Button
                       variant="outline"
@@ -376,7 +351,9 @@ export default function ComponentsPage() {
           <TabsTrigger value="checklist">Checklist</TabsTrigger>
           <TabsTrigger value="verification">Verification Screen</TabsTrigger>
           <TabsTrigger value="video-recorder">Video Recorder</TabsTrigger>
-          <TabsTrigger value="video-recorder-new">New Video Recorder</TabsTrigger>
+          <TabsTrigger value="video-recorder-new">
+            New Video Recorder
+          </TabsTrigger>
         </TabsList>
 
         <TabsContent
@@ -457,11 +434,16 @@ export default function ComponentsPage() {
           <VideoRecorderDemo />
         </TabsContent>
 
-        <TabsContent value="video-recorder-new" className="w-full max-w-md mx-auto">
+        <TabsContent
+          value="video-recorder-new"
+          className="w-full max-w-md mx-auto"
+        >
           <Card className="w-full mb-4">
             <CardHeader className="pb-2">
               <CardTitle>New Video Recorder</CardTitle>
-              <CardDescription>Using react-record-webcam library</CardDescription>
+              <CardDescription>
+                Using react-record-webcam library
+              </CardDescription>
             </CardHeader>
           </Card>
 

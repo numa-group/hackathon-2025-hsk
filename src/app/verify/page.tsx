@@ -11,23 +11,15 @@ import { ChecklistItem } from "../components/checklist";
 // Mock data - initial checklist items
 const initialChecklistItems: ChecklistItem[] = [
   {
-    title: "A kindle should not be present on table.",
+    title: "A man holding a mobile",
     status: "unverified",
   },
   {
-    title: "A bottle should be present on table.",
+    title: "A pen should be visible",
     status: "unverified",
   },
   {
-    title: "A mobile phone should be present on table.",
-    status: "unverified",
-  },
-  {
-    title: "Laptop should be present on table",
-    status: "unverified",
-  },
-  {
-    title: "A man holding a bottle.",
+    title: "A watch should be present.",
     status: "unverified",
   },
 ];
