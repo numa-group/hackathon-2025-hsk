@@ -1,0 +1,58 @@
+{
+  "id": "4a634bf2-9bf2-4c32-8b9e-8320123b5e18",
+  "title": "IMG 3857",
+  "videoUrl": "/videos/IMG 3857.mp4",
+  "manualObservations": [],
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The shower head and controls appear clean and in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The sink and countertop are clean and free of debris.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "The mirror and light fixture above it appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    },
+    {
+      "id": "ai-3",
+      "description": "The shower door and tracks appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:07"
+    },
+    {
+      "id": "ai-4",
+      "description": "The shower floor looks clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:08"
+    },
+    {
+      "id": "ai-5",
+      "description": "The bathroom sink and counter area are clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:09"
+    },
+    {
+      "id": "ai-6",
+      "description": "The body wash, shampoo, and conditioner bottles are neatly arranged.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:07"
+    }
+  ],
+  "summary": "Analysis found 7 observations: 7 positive and 0 negative. \n  There were 6 cleanliness observations and 1 maintenance observations."
+}

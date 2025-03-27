@@ -269,7 +269,7 @@ watch-files: true
 #auto-lint: true
 
 ## Specify command to run tests
-test-cmd: pnpm lint
+test-cmd: npm run lint
 ## Enable/disable automatic testing after changes (default: False)
 #auto-test: false
 
