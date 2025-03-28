@@ -5,7 +5,6 @@ import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Button } from "@/components/ui/button";
 import { VideoRecorderNew } from "@/app/components/video-recorder-new";
 import { ObservationModal } from "@/app/components/observation-modal";
 import {
@@ -15,7 +14,7 @@ import {
 } from "../actions";
 
 export default function LiveAnalysisPage() {
-  const [isRecording, setIsRecording] = useState(false);
+  const [isRecording, setIsRecording] = useState(true);
   const [isProcessing, setIsProcessing] = useState(false);
   const [analysis, setAnalysis] = useState<VideoAnalysis | null>(null);
   const [statusMessage, setStatusMessage] = useState<{
@@ -26,14 +25,6 @@ export default function LiveAnalysisPage() {
   const [selectedObservation, setSelectedObservation] =
     useState<AnalysisObservation | null>(null);
   const [currentObservationIndex, setCurrentObservationIndex] = useState(0);
-
-  const handleStartRecording = () => {
-    setIsRecording(true);
-    setStatusMessage({
-      text: "Recording started. Click 'Stop Recording' when finished.",
-      type: "info",
-    });
-  };
 
   const handleRecordingDone = async (videoData: {
     blob: Blob;
@@ -136,6 +127,7 @@ export default function LiveAnalysisPage() {
             </CardHeader>
             <CardContent>
               <VideoRecorderNew
+                hideCancel
                 onDone={handleRecordingDone}
                 onCancel={handleCancelRecording}
                 width="100%"
@@ -231,35 +223,15 @@ export default function LiveAnalysisPage() {
         ) : (
           <Card>
             <CardHeader className="pb-2">
-              <CardTitle className="text-base">Ready to Record</CardTitle>
+              <CardTitle className="text-base">Record Your Property</CardTitle>
             </CardHeader>
-            <CardContent className="flex items-center justify-center h-[500px] bg-muted/50 rounded-lg">
-              <div className="text-center">
-                <div className="mb-4 flex justify-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="48"
-                    height="48"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    className="text-muted-foreground"
-                  >
-                    <path d="M15 10l4.553-2.276A1 1 0 0121 8.618v6.764a1 1 0 01-1.447.894L15 14v-4z" />
-                    <rect x="3" y="6" width="12" height="12" rx="2" ry="2" />
-                  </svg>
-                </div>
-                <h3 className="text-base font-medium">No Recording Yet</h3>
-                <p className="text-muted-foreground mt-2 text-sm max-w-md">
-                  Record your property for AI analysis
-                </p>
-                <Button onClick={handleStartRecording} className="mt-4">
-                  Start Recording
-                </Button>
-              </div>
+            <CardContent>
+              <VideoRecorderNew
+                onDone={handleRecordingDone}
+                onCancel={handleCancelRecording}
+                width="100%"
+                height="auto"
+              />
             </CardContent>
           </Card>
         )}

@@ -9,6 +9,7 @@ import { VideoRecorderNewProps } from "./types";
 export const VideoRecorderNew = ({
   onDone,
   onCancel,
+  hideCancel = false,
   width = "100%",
   height = "100%",
 }: VideoRecorderNewProps) => {
@@ -157,9 +158,11 @@ export const VideoRecorderNew = ({
       {/* Controls */}
       <div className="flex justify-between items-center mt-4 gap-2">
         <Button onClick={switchDevice}>Switch Device</Button>
-        <Button variant="outline" onClick={handleCancelRecording}>
-          Cancel
-        </Button>
+        {!hideCancel && (
+          <Button variant="outline" onClick={handleCancelRecording}>
+            Cancel
+          </Button>
+        )}
         {activeRecording?.status === "RECORDING" ? (
           <Button variant="destructive" onClick={handleDoneRecording}>
             Stop Recording

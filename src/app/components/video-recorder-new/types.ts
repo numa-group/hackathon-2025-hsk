@@ -5,6 +5,7 @@ export interface RecordedVideoDataNew {
 }
 
 export interface VideoRecorderNewProps {
+  hideCancel?: boolean;
   onDone: (videoData: RecordedVideoDataNew) => void;
   onCancel: () => void;
   maxDuration?: number; // in seconds
