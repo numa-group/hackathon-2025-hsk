@@ -29,7 +29,8 @@ export default function LiveAnalysisPage() {
     type: "info" | "success" | "error";
   } | null>(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedObservation, setSelectedObservation] = useState<AnalysisObservation | null>(null);
+  const [selectedObservation, setSelectedObservation] =
+    useState<AnalysisObservation | null>(null);
   const [currentObservationIndex, setCurrentObservationIndex] = useState(0);
 
   const handleStartRecording = () => {
@@ -54,9 +55,13 @@ export default function LiveAnalysisPage() {
 
     try {
       // Create a File object from the Blob
-      const file = new File([videoData.blob], `live-recording-${Date.now()}.webm`, {
-        type: videoData.mimeType,
-      });
+      const file = new File(
+        [videoData.blob],
+        `live-recording-${Date.now()}.webm`,
+        {
+          type: videoData.mimeType,
+        },
+      );
 
       // Create FormData and append the file
       const formData = new FormData();
@@ -68,13 +73,13 @@ export default function LiveAnalysisPage() {
       if (result.success && result.analysis) {
         // Store the video URL locally instead of using the server path
         const localVideoUrl = videoData.url;
-        
+
         // Create a modified analysis object with the local URL
         const localAnalysis = {
           ...result.analysis,
-          videoUrl: localVideoUrl
+          videoUrl: localVideoUrl,
         };
-        
+
         setAnalysis(localAnalysis);
         setStatusMessage({
           text: "Video processed successfully!",
@@ -106,9 +111,12 @@ export default function LiveAnalysisPage() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">Live Video Analysis</h1>
+            <h1 className="text-2xl sm:text-3xl font-bold">
+              Live Video Analysis
+            </h1>
             <p className="text-sm text-muted-foreground mt-1">
-              Note: Recordings are stored locally in your browser and will not be saved when you leave this page.
+              Note: Recordings are stored locally in your browser and will not
+              be saved when you leave this page.
             </p>
           </div>
 
@@ -129,7 +137,7 @@ export default function LiveAnalysisPage() {
               statusMessage.type === "success" &&
                 "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/30",
               statusMessage.type === "info" &&
-                "bg-primary/10 text-primary border-primary/20"
+                "bg-primary/10 text-primary border-primary/20",
             )}
           >
             {statusMessage.text}
@@ -160,7 +168,9 @@ export default function LiveAnalysisPage() {
             <CardContent className="flex items-center justify-center h-[500px]">
               <div className="flex flex-col items-center gap-4">
                 <div className="size-12 border-4 border-primary/30 border-t-primary rounded-full animate-spin"></div>
-                <p className="text-muted-foreground">This may take a few minutes...</p>
+                <p className="text-muted-foreground">
+                  This may take a few minutes...
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -190,45 +200,51 @@ export default function LiveAnalysisPage() {
             <Card>
               <CardHeader>
                 <CardTitle>AI Observations</CardTitle>
-                <CardDescription>Analysis of the property condition</CardDescription>
+                <CardDescription>
+                  Analysis of the property condition
+                </CardDescription>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[350px] pr-4">
-                  {analysis.aiObservations.map((observation: AnalysisObservation) => (
-                    <motion.div
-                      key={observation.id}
-                      initial={{ opacity: 0, x: 0 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ duration: 0.3 }}
-                      className={cn(
-                        "mb-2 p-3 rounded-lg",
-                        observation.sentiment === "positive" &&
-                          "bg-primary/10 border-l-4 border-primary",
-                        observation.sentiment === "negative" &&
-                          "bg-destructive/15 border-l-4 border-destructive font-medium",
-                        observation.sentiment === "negative" && "shadow-sm"
-                      )}
-                    >
-                      <div className="flex justify-between items-start">
-                        <p>{observation.description}</p>
-                        {observation.timestamp && (
-                          <button
-                            onClick={() => {
-                              setSelectedObservation(observation);
-                              setCurrentObservationIndex(analysis.aiObservations.indexOf(observation));
-                              setIsModalOpen(true);
-                            }}
-                            className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/30 transition-colors"
-                          >
-                            {observation.timestamp || "N/A"}
-                          </button>
+                  {analysis.aiObservations.map(
+                    (observation: AnalysisObservation) => (
+                      <motion.div
+                        key={observation.id}
+                        initial={{ opacity: 0, x: 0 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{ duration: 0.3 }}
+                        className={cn(
+                          "mb-2 p-3 rounded-lg",
+                          observation.sentiment === "positive" &&
+                            "bg-primary/10 border-l-4 border-primary",
+                          observation.sentiment === "negative" &&
+                            "bg-destructive/15 border-l-4 border-destructive font-medium",
+                          observation.sentiment === "negative" && "shadow-sm",
                         )}
-                      </div>
-                      <p className="text-xs text-muted-foreground mt-1">
-                        {observation.type}
-                      </p>
-                    </motion.div>
-                  ))}
+                      >
+                        <div className="flex justify-between items-start">
+                          <p>{observation.description}</p>
+                          {observation.timestamp && (
+                            <button
+                              onClick={() => {
+                                setSelectedObservation(observation);
+                                setCurrentObservationIndex(
+                                  analysis.aiObservations.indexOf(observation),
+                                );
+                                setIsModalOpen(true);
+                              }}
+                              className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/30 transition-colors"
+                            >
+                              {observation.timestamp || "N/A"}
+                            </button>
+                          )}
+                        </div>
+                        <p className="text-xs text-muted-foreground mt-1">
+                          {observation.type}
+                        </p>
+                      </motion.div>
+                    ),
+                  )}
                 </ScrollArea>
               </CardContent>
             </Card>
@@ -238,7 +254,8 @@ export default function LiveAnalysisPage() {
             <CardHeader>
               <CardTitle>Ready to Record</CardTitle>
               <CardDescription>
-                Click the "Start Recording" button to begin your property inspection
+                Click the Start Recording button to begin your property
+                inspection
               </CardDescription>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-[500px] bg-muted/50 rounded-lg">
@@ -262,8 +279,8 @@ export default function LiveAnalysisPage() {
                 </div>
                 <h3 className="text-lg font-medium">No Recording Yet</h3>
                 <p className="text-muted-foreground mt-2 max-w-md">
-                  Record a video of your property inspection and our AI will analyze it for
-                  cleanliness and maintenance observations.
+                  Record a video of your property inspection and our AI will
+                  analyze it for cleanliness and maintenance observations.
                 </p>
                 <Button onClick={handleStartRecording} className="mt-4">
                   Start Recording
@@ -286,14 +303,17 @@ export default function LiveAnalysisPage() {
           onNext={() => {
             if (!analysis) return;
             const observations = analysis.aiObservations;
-            const nextIndex = (currentObservationIndex + 1) % observations.length;
+            const nextIndex =
+              (currentObservationIndex + 1) % observations.length;
             setCurrentObservationIndex(nextIndex);
             setSelectedObservation(observations[nextIndex]);
           }}
           onPrevious={() => {
             if (!analysis) return;
             const observations = analysis.aiObservations;
-            const prevIndex = (currentObservationIndex - 1 + observations.length) % observations.length;
+            const prevIndex =
+              (currentObservationIndex - 1 + observations.length) %
+              observations.length;
             setCurrentObservationIndex(prevIndex);
             setSelectedObservation(observations[prevIndex]);
           }}
