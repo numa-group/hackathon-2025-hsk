@@ -38,14 +38,19 @@ interface AIResponse {
 
 export async function processVideoAnalysis(
   formData: FormData,
-): Promise<{ success: boolean; message: string; analysis?: VideoAnalysis; filename?: string }> {
+): Promise<{
+  success: boolean;
+  message: string;
+  analysis?: VideoAnalysis;
+  filename?: string;
+}> {
   try {
     // Get the uploaded file
     const file = formData.get("video") as File;
     if (!file) {
       return { success: false, message: "No video file provided" };
     }
-    
+
     // Store the original filename for error reporting
     const originalFilename = file.name;
 
@@ -437,7 +442,8 @@ export async function loadAllAnalyses(): Promise<
 
       // Import is done at the top level, so we can use manualObservations directly
       console.log("TITLE: ", analysis.title);
-      const matchingObservations = manualObservations[analysis.title] || [];
+      const matchingObservations =
+        manualObservations[analysis.title.replaceAll("_", " ")] || [];
 
       return {
         ...analysis,

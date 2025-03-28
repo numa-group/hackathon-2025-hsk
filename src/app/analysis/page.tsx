@@ -68,6 +68,8 @@ export default function AnalysisPage() {
   };
 
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    e.preventDefault(); // Prevent any default behavior
+    
     if (!e.target.files || e.target.files.length === 0) return;
 
     // Convert FileList to array
@@ -111,39 +113,44 @@ export default function AnalysisPage() {
       setUploadQueue(validFiles);
       setTotalUploads(validFiles.length);
       setCurrentUploadIndex(0);
-      
-      // Start processing the queue
-      try {
-        await processNextInQueue(validFiles, 0);
-      } catch (error) {
-        console.error("Error processing upload queue:", error);
-      }
     } else {
       // All files are valid
       setUploadQueue(videoFiles);
       setTotalUploads(videoFiles.length);
       setCurrentUploadIndex(0);
-      
-      // Start processing the queue
-      try {
-        await processNextInQueue(videoFiles, 0);
-      } catch (error) {
-        console.error("Error processing upload queue:", error);
-      }
     }
+    
+    // Start processing the queue in a separate step to avoid race conditions
+    setTimeout(() => {
+      processNextInQueue(videoFiles, 0).catch(error => {
+        console.error("Error processing upload queue:", error);
+      });
+    }, 0);
   };
 
   const processNextInQueue = async (queue: File[], index: number) => {
+    // Safety check to prevent processing an empty queue
+    if (!queue || queue.length === 0) {
+      setIsUploading(false);
+      return;
+    }
+    
     if (index >= queue.length) {
       // All uploads complete
       setIsUploading(false);
       
-      // Count successes and failures
-      const statuses = Object.values(fileStatuses);
-      const successCount = statuses.filter(s => s.status === 'success').length;
-      const errorCount = statuses.filter(s => s.status === 'error').length;
+      // Get the latest file statuses to count successes and failures
+      setFileStatuses(currentStatuses => {
+        const statuses = Object.values(currentStatuses);
+        const successCount = statuses.filter(s => s.status === 'success').length;
+        const errorCount = statuses.filter(s => s.status === 'error').length;
+        
+        // Update the upload message with the correct counts
+        setUploadMessage(`Upload complete: ${successCount} successful, ${errorCount} failed or skipped.`);
+        
+        return currentStatuses; // Return unchanged, we just needed the latest state
+      });
       
-      setUploadMessage(`Upload complete: ${successCount} successful, ${errorCount} failed or skipped.`);
       setUploadQueue([]);
       
       // Reset the form
@@ -166,11 +173,18 @@ export default function AnalysisPage() {
       
       // Process next file only after current one is complete
       setCurrentUploadIndex(index + 1);
-      await processNextInQueue(queue, index + 1);
+      
+      // Use setTimeout to avoid call stack issues with deep recursion
+      // and to ensure React state updates properly between files
+      setTimeout(() => {
+        processNextInQueue(queue, index + 1).catch(err => {
+          console.error(`Error in queue processing:`, err);
+        });
+      }, 100);
     } catch (error) {
       console.error(`Error processing file at index ${index}:`, error);
       
-      // Update status to error
+      // Update status to error (this might be redundant as handleUpload also sets error status)
       setFileStatuses(prev => ({
         ...prev,
         [currentFile.name]: { 
@@ -181,52 +195,70 @@ export default function AnalysisPage() {
       
       // Continue with next file even if this one failed
       setCurrentUploadIndex(index + 1);
-      await processNextInQueue(queue, index + 1);
+      
+      // Use setTimeout to avoid call stack issues with deep recursion
+      setTimeout(() => {
+        processNextInQueue(queue, index + 1).catch(err => {
+          console.error(`Error in queue processing:`, err);
+        });
+      }, 100);
     }
   };
 
-  const handleUpload = async (file: File, index: number, total: number) => {
+  const handleUpload = async (file: File, index: number = 0, total: number = 1) => {
     setIsUploading(true);
     setUploadMessage(`Uploading and analyzing video ${index + 1} of ${total}: ${file.name}...`);
 
     const formData = new FormData();
     formData.append("video", file);
 
-    const result = await processVideoAnalysis(formData);
+    try {
+      const result = await processVideoAnalysis(formData);
 
-    if (result.success) {
-      // Refresh the analyses list
-      const updatedAnalyses = await loadAllAnalyses();
-      setAnalyses(updatedAnalyses);
+      if (result.success) {
+        // Update status to success
+        setFileStatuses(prev => ({
+          ...prev,
+          [file.name]: { status: 'success' }
+        }));
+        
+        // Only refresh the analyses list after successful upload
+        // This is done without causing a full page reload
+        const updatedAnalyses = await loadAllAnalyses();
+        setAnalyses(updatedAnalyses);
 
-      // Select the newly uploaded video if available
-      if (result.analysis) {
-        setSelectedVideoId(result.analysis.id);
+        // Select the newly uploaded video if available
+        if (result.analysis) {
+          setSelectedVideoId(result.analysis.id);
+        }
+      } else {
+        console.error(`Error processing ${file.name}: ${result.message}`);
+        
+        // Update status to error
+        setFileStatuses(prev => ({
+          ...prev,
+          [file.name]: { status: 'error', message: result.message }
+        }));
+        
+        // Don't throw if the file already exists - just continue
+        if (!result.message.includes('already exists')) {
+          throw new Error(result.message);
+        }
       }
       
-      // Update status to success
-      setFileStatuses(prev => ({
-        ...prev,
-        [file.name]: { status: 'success' }
-      }));
-    } else {
-      console.error(`Error processing ${file.name}: ${result.message}`);
-      
+      return result;
+    } catch (error) {
       // Update status to error
       setFileStatuses(prev => ({
         ...prev,
-        [file.name]: { status: 'error', message: result.message }
+        [file.name]: { 
+          status: 'error', 
+          message: error instanceof Error ? error.message : String(error)
+        }
       }));
       
-      // Don't throw if the file already exists - just continue
-      if (result.message.includes('already exists')) {
-        return result;
-      }
-      
-      throw new Error(result.message);
+      throw error;
     }
-    
-    return result;
   };
 
   const getObservationClassName = (type: AnalysisObservation["sentiment"]) => {
@@ -276,10 +308,8 @@ export default function AnalysisPage() {
               ref={formRef}
               className="flex items-center gap-2"
               onSubmit={(e) => {
-                e.preventDefault();
-                if (fileInputRef.current?.files?.length) {
-                  handleUpload(fileInputRef.current.files[0]);
-                }
+                e.preventDefault(); // Prevent form submission
+                return false; // Ensure no default behavior
               }}
             >
               <input
