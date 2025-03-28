@@ -38,6 +38,7 @@ export default function AnalysisPage() {
   const [uploadQueue, setUploadQueue] = useState<File[]>([]);
   const [currentUploadIndex, setCurrentUploadIndex] = useState(0);
   const [totalUploads, setTotalUploads] = useState(0);
+  const [fileStatuses, setFileStatuses] = useState<Record<string, { status: 'pending' | 'processing' | 'success' | 'error', message?: string }>>({});
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedObservation, setSelectedObservation] =
     useState<AnalysisObservation | null>(null);
@@ -80,10 +81,28 @@ export default function AnalysisPage() {
       return;
     }
     
+    // Initialize file statuses
+    const initialStatuses: Record<string, { status: 'pending' | 'processing' | 'success' | 'error', message?: string }> = {};
+    videoFiles.forEach(file => {
+      initialStatuses[file.name] = { status: 'pending' };
+    });
+    setFileStatuses(initialStatuses);
+    
     // Check file sizes (limit to 100MB each)
     const oversizedFiles = videoFiles.filter(file => file.size > 1024 * 1024 * 100);
     if (oversizedFiles.length > 0) {
       setUploadMessage(`${oversizedFiles.length} file(s) exceed 100MB limit and will be skipped`);
+      
+      // Mark oversized files as errors
+      const updatedStatuses = { ...initialStatuses };
+      oversizedFiles.forEach(file => {
+        updatedStatuses[file.name] = { 
+          status: 'error', 
+          message: 'File exceeds 100MB limit' 
+        };
+      });
+      setFileStatuses(updatedStatuses);
+      
       // Remove oversized files
       const validFiles = videoFiles.filter(file => file.size <= 1024 * 1024 * 100);
       if (validFiles.length === 0) return;
@@ -118,7 +137,13 @@ export default function AnalysisPage() {
     if (index >= queue.length) {
       // All uploads complete
       setIsUploading(false);
-      setUploadMessage("All videos uploaded and analyzed successfully!");
+      
+      // Count successes and failures
+      const statuses = Object.values(fileStatuses);
+      const successCount = statuses.filter(s => s.status === 'success').length;
+      const errorCount = statuses.filter(s => s.status === 'error').length;
+      
+      setUploadMessage(`Upload complete: ${successCount} successful, ${errorCount} failed or skipped.`);
       setUploadQueue([]);
       
       // Reset the form
@@ -128,14 +153,32 @@ export default function AnalysisPage() {
       return;
     }
 
+    const currentFile = queue[index];
+    
     try {
-      await handleUpload(queue[index], index, queue.length);
+      // Update status to processing
+      setFileStatuses(prev => ({
+        ...prev,
+        [currentFile.name]: { status: 'processing' }
+      }));
+      
+      await handleUpload(currentFile, index, queue.length);
       
       // Process next file only after current one is complete
       setCurrentUploadIndex(index + 1);
       await processNextInQueue(queue, index + 1);
     } catch (error) {
       console.error(`Error processing file at index ${index}:`, error);
+      
+      // Update status to error
+      setFileStatuses(prev => ({
+        ...prev,
+        [currentFile.name]: { 
+          status: 'error', 
+          message: error instanceof Error ? error.message : String(error)
+        }
+      }));
+      
       // Continue with next file even if this one failed
       setCurrentUploadIndex(index + 1);
       await processNextInQueue(queue, index + 1);
@@ -160,8 +203,26 @@ export default function AnalysisPage() {
       if (result.analysis) {
         setSelectedVideoId(result.analysis.id);
       }
+      
+      // Update status to success
+      setFileStatuses(prev => ({
+        ...prev,
+        [file.name]: { status: 'success' }
+      }));
     } else {
       console.error(`Error processing ${file.name}: ${result.message}`);
+      
+      // Update status to error
+      setFileStatuses(prev => ({
+        ...prev,
+        [file.name]: { status: 'error', message: result.message }
+      }));
+      
+      // Don't throw if the file already exists - just continue
+      if (result.message.includes('already exists')) {
+        return result;
+      }
+      
       throw new Error(result.message);
     }
     
@@ -279,19 +340,54 @@ export default function AnalysisPage() {
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            className="bg-card border rounded-lg p-3 shadow-sm"
+            className="bg-card border rounded-lg p-4 shadow-sm"
           >
-            <div className="flex flex-col gap-2">
-              <p className="text-sm font-medium">Upload Progress</p>
+            <div className="flex flex-col gap-3">
+              <div className="flex justify-between items-center">
+                <p className="text-sm font-medium">Upload Progress</p>
+                <p className="text-xs text-muted-foreground">
+                  Processing {currentUploadIndex} of {totalUploads} videos
+                </p>
+              </div>
+              
               <div className="w-full bg-muted rounded-full h-2.5">
                 <div 
                   className="bg-primary h-2.5 rounded-full" 
                   style={{ width: `${(currentUploadIndex / totalUploads) * 100}%` }}
                 ></div>
               </div>
-              <p className="text-xs text-muted-foreground">
-                Processing {currentUploadIndex} of {totalUploads} videos
-              </p>
+              
+              <div className="mt-2 space-y-2">
+                <p className="text-xs font-medium">File Status:</p>
+                <div className="max-h-[200px] overflow-y-auto pr-2">
+                  {Object.entries(fileStatuses).map(([filename, status]) => (
+                    <div key={filename} className="flex items-center justify-between py-1 border-b border-muted last:border-0">
+                      <div className="flex items-center gap-2 truncate max-w-[70%]">
+                        <span className={cn(
+                          "size-2 rounded-full",
+                          status.status === 'pending' && "bg-muted",
+                          status.status === 'processing' && "bg-blue-500",
+                          status.status === 'success' && "bg-green-500",
+                          status.status === 'error' && "bg-red-500"
+                        )}></span>
+                        <span className="text-xs truncate" title={filename}>{filename}</span>
+                      </div>
+                      <span className={cn(
+                        "text-xs",
+                        status.status === 'pending' && "text-muted-foreground",
+                        status.status === 'processing' && "text-blue-500",
+                        status.status === 'success' && "text-green-500",
+                        status.status === 'error' && "text-red-500"
+                      )}>
+                        {status.status === 'pending' && 'Waiting...'}
+                        {status.status === 'processing' && 'Processing...'}
+                        {status.status === 'success' && 'Complete'}
+                        {status.status === 'error' && (status.message || 'Failed')}
+                      </span>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </motion.div>
         )}

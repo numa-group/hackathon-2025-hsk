@@ -72,9 +72,10 @@ export async function processVideoAnalysis(
 
     // Check if files already exist
     if (fs.existsSync(videoPath)) {
+      console.log(`File ${mp4Filename} already exists, skipping this file.`);
       return {
         success: false,
-        message: `A file with the name ${mp4Filename} already exists. Please rename your file.`,
+        message: `A file with the name ${mp4Filename} already exists and was skipped.`,
         filename: originalFilename,
       };
     }
