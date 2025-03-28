@@ -27,6 +27,7 @@ import {
   VideoAnalysis,
   AnalysisObservation,
 } from "./actions";
+import { manualObservations } from "./manual-observations";
 
 export default function AnalysisPage() {
   const [analyses, setAnalyses] = useState<VideoAnalysis[]>([]);
@@ -42,15 +43,33 @@ export default function AnalysisPage() {
 
   const selectedVideo = analyses.find((video) => video.id === selectedVideoId);
 
+  // Get the base filename without extension to match with manual observations
+  const getBaseFilename = (filename: string): string => {
+    // Remove file extension if present
+    return filename.replace(/\.[^/.]+$/, "");
+  };
+
   // Load all analyses on component mount
   useEffect(() => {
     async function fetchAnalyses() {
       const allAnalyses = await loadAllAnalyses();
-      setAnalyses(allAnalyses);
+
+      // Apply manual observations to each analysis if available
+      const updatedAnalyses = allAnalyses.map((analysis) => {
+        const baseFilename = getBaseFilename(analysis.title);
+        const matchingObservations = manualObservations[baseFilename] || [];
+
+        return {
+          ...analysis,
+          manualObservations: matchingObservations,
+        };
+      });
+
+      setAnalyses(updatedAnalyses);
 
       // Select the first video if available and none is selected
-      if (allAnalyses.length > 0 && !selectedVideoId) {
-        setSelectedVideoId(allAnalyses[0].id);
+      if (updatedAnalyses.length > 0 && !selectedVideoId) {
+        setSelectedVideoId(updatedAnalyses[0].id);
       }
     }
 
@@ -369,14 +388,14 @@ export default function AnalysisPage() {
                                     onClick={() =>
                                       handleTimestampClick(
                                         observation,
-                                        selectedVideo.aiObservations.indexOf(
+                                        selectedVideo.manualObservations.indexOf(
                                           observation,
                                         ),
                                       )
                                     }
                                     className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/30 transition-colors"
                                   >
-                                    {observation.timestamp}
+                                    {observation.timestamp || "N/A"}
                                   </button>
                                 )}
                               </div>

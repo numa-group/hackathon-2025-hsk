@@ -14,15 +14,14 @@ export interface AnalysisObservation {
   id: string;
   description: string;
   sentiment: "positive" | "negative";
-  type: "cleanliness" | "maintenance";
-  timestamp: string;
+  type: "cleanliness" | "maintenance" | "styling";
+  timestamp?: string;
 }
 
 export interface VideoAnalysis {
   id: string;
   title: string;
   videoUrl: string;
-  manualObservations: AnalysisObservation[];
   aiObservations: AnalysisObservation[];
   summary: string;
 }
@@ -98,7 +97,7 @@ export async function processVideoAnalysis(
     // Get the processed file size
     const processedFileStats = fs.statSync(videoPath);
     const processedFileSizeInMB = processedFileStats.size / (1024 * 1024);
-    
+
     // Read the processed file
     const processedBuffer = fs.readFileSync(videoPath);
     let aiResponse;
@@ -130,7 +129,6 @@ export async function processVideoAnalysis(
       id: analysisId,
       title: filenameWithoutExt,
       videoUrl: `/videos/${filenameWithoutExt}.mp4`,
-      manualObservations: [], // Empty as requested
       aiObservations: aiObservations,
       summary: generateSummary(aiObservations),
     };
@@ -179,7 +177,8 @@ const getResponseSchema = () => ({
           },
           timestamp: {
             type: "string",
-            description: "Timestamp in the video where this observation was made (e.g., '0:45', '2:12')",
+            description:
+              "Timestamp in the video where this observation was made (e.g., '0:45', '2:12')",
           },
         },
         required: ["description", "sentiment", "type", "timestamp"],
@@ -372,19 +371,19 @@ function compressVideo(inputPath: string, outputPath: string): Promise<void> {
   return new Promise((resolve, reject) => {
     // Ensure output path has .mp4 extension
     const outputPathMp4 = outputPath.replace(/\.[^/.]+$/, "") + ".mp4";
-    
+
     ffmpeg(inputPath)
-      .outputFormat('mp4')
-      .videoCodec('libx264')
+      .outputFormat("mp4")
+      .videoCodec("libx264")
       .noAudio() // Remove audio completely
       .outputOptions([
-        '-pix_fmt yuv420p', // Ensure compatibility
-        '-profile:v baseline', // Use baseline profile for better compatibility
-        '-level 3.0',
-        '-movflags +faststart', // Optimize for web playback
-        '-preset ultrafast', // Fastest encoding preset
-        '-crf 28', // Higher CRF = lower quality but faster encoding (23->28)
-        '-vf scale=854:-2' // Scale to 480p while maintaining aspect ratio
+        "-pix_fmt yuv420p", // Ensure compatibility
+        "-profile:v baseline", // Use baseline profile for better compatibility
+        "-level 3.0",
+        "-movflags +faststart", // Optimize for web playback
+        "-preset ultrafast", // Fastest encoding preset
+        "-crf 28", // Higher CRF = lower quality but faster encoding (23->28)
+        "-vf scale=854:-2", // Scale to 480p while maintaining aspect ratio
       ])
       .on("start", (commandLine) => {
         console.log("FFmpeg command:", commandLine);
@@ -405,7 +404,9 @@ function compressVideo(inputPath: string, outputPath: string): Promise<void> {
 }
 
 // Function to load all available analyses
-export async function loadAllAnalyses(): Promise<VideoAnalysis[]> {
+export async function loadAllAnalyses(): Promise<
+  (VideoAnalysis & { manualObservations: AnalysisObservation[] })[]
+> {
   try {
     const videosDir = path.join(process.cwd(), "public", "videos");
 

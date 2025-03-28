@@ -2,7 +2,6 @@
   "id": "4a634bf2-9bf2-4c32-8b9e-8320123b5e18",
   "title": "IMG 3857",
   "videoUrl": "/videos/IMG 3857.mp4",
-  "manualObservations": [],
   "aiObservations": [
     {
       "id": "ai-0",
@@ -56,3 +55,4 @@
   ],
   "summary": "Analysis found 7 observations: 7 positive and 0 negative. \n  There were 6 cleanliness observations and 1 maintenance observations."
 }
+

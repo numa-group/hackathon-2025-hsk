@@ -212,9 +212,15 @@ export function ObservationModal({
                       <span className="text-sm text-muted-foreground">
                         {observation?.type}
                       </span>
-                      <span className="inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
-                        {observation?.timestamp}
-                      </span>
+                      {observation?.timestamp ? (
+                        <span className="inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
+                          {observation.timestamp}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                          No timestamp
+                        </span>
+                      )}
                     </div>
                   </div>
 
@@ -342,7 +348,7 @@ export function ObservationModal({
                       </div>
                     </div>
                   </div>
-                  {observation?.timestamp && (
+                  {observation?.timestamp ? (
                     <div className="mt-4 text-sm text-muted-foreground">
                       <div className="flex items-center justify-center gap-4 bg-muted/30 p-3 rounded-lg">
                         <div className="flex flex-col items-center">
@@ -371,6 +377,11 @@ export function ObservationModal({
                         {parseTimestamp(observation.timestamp) - 1}s -{" "}
                         {parseTimestamp(observation.timestamp) + 1}s)
                       </p>
+                    </div>
+                  ) : (
+                    <div className="mt-4 text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg text-center">
+                      <p>No timestamp available for this observation.</p>
+                      <p>Full video playback is available.</p>
                     </div>
                   )}
                 </div>
