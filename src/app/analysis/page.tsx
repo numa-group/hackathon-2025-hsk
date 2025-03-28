@@ -35,6 +35,8 @@ export default function AnalysisPage() {
   const [selectedVideoId, setSelectedVideoId] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [messageStatus, setMessageStatus] = useState<"success" | "error" | "info">("info");
+  const [showMessage, setShowMessage] = useState(false);
   const [uploadQueue, setUploadQueue] = useState<File[]>([]);
   const [currentUploadIndex, setCurrentUploadIndex] = useState(0);
   const [totalUploads, setTotalUploads] = useState(0);
@@ -147,6 +149,13 @@ export default function AnalysisPage() {
         
         // Update the upload message with the correct counts
         setUploadMessage(`Upload complete: ${successCount} successful, ${errorCount} failed or skipped.`);
+        setMessageStatus(successCount > 0 ? "success" : "error");
+        setShowMessage(true);
+      
+        // Auto-hide message after 5 seconds
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 5000);
         
         return currentStatuses; // Return unchanged, we just needed the latest state
       });
@@ -208,6 +217,8 @@ export default function AnalysisPage() {
   const handleUpload = async (file: File, index: number = 0, total: number = 1) => {
     setIsUploading(true);
     setUploadMessage(`Uploading and analyzing video ${index + 1} of ${total}: ${file.name}...`);
+    setMessageStatus("info");
+    setShowMessage(true);
 
     const formData = new FormData();
     formData.append("video", file);
@@ -221,6 +232,13 @@ export default function AnalysisPage() {
           ...prev,
           [file.name]: { status: 'success' }
         }));
+        setMessageStatus("success");
+        setShowMessage(true);
+        
+        // Auto-hide message after 5 seconds
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 5000);
         
         // Only refresh the analyses list after successful upload
         // This is done without causing a full page reload
@@ -239,6 +257,13 @@ export default function AnalysisPage() {
           ...prev,
           [file.name]: { status: 'error', message: result.message }
         }));
+        setMessageStatus("error");
+        setShowMessage(true);
+        
+        // Auto-hide message after 5 seconds
+        setTimeout(() => {
+          setShowMessage(false);
+        }, 5000);
         
         // Don't throw if the file already exists - just continue
         if (!result.message.includes('already exists')) {
@@ -348,18 +373,16 @@ export default function AnalysisPage() {
           </div>
         </div>
 
-        {uploadMessage && (
+        {uploadMessage && showMessage && (
           <motion.div
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={cn(
               "p-3 rounded-lg text-sm",
-              uploadMessage.includes("Error") ||
-                uploadMessage.includes("failed") ||
-                uploadMessage.includes("exceed")
-                ? "bg-destructive/10 text-destructive"
-                : "bg-primary/10 text-primary",
+              messageStatus === "error" && "bg-destructive/10 text-destructive",
+              messageStatus === "success" && "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
+              messageStatus === "info" && "bg-primary/10 text-primary"
             )}
           >
             {uploadMessage}
