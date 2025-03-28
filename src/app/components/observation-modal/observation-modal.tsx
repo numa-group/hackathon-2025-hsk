@@ -154,14 +154,14 @@ export function ObservationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 p-2 overflow-y-auto pt-10 sm:pt-16 lg:pt-20"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 p-1 sm:p-2 overflow-y-auto pt-4 sm:pt-16 lg:pt-20"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             className={cn(
-              "relative rounded-lg bg-card shadow-lg overflow-auto max-h-[90vh] sm:max-h-[85vh]",
+              "relative rounded-lg bg-card shadow-lg overflow-auto max-h-[95vh] sm:max-h-[85vh]",
               isFullVideoMode ? "w-full max-w-4xl" : "w-full max-w-7xl",
             )}
           >
@@ -194,10 +194,10 @@ export function ObservationModal({
               </div>
             ) : (
               // Observation mode - show observation details and restricted video
-              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6">
+              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-2 sm:gap-6 p-2 sm:p-6">
                 {/* Video player - moved to top on mobile */}
                 <div className="flex flex-col order-1 lg:order-2">
-                  <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto sm:h-[500px] lg:h-[600px] xl:h-[700px]">
+                  <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto h-[70vh] sm:h-[500px] lg:h-[600px] xl:h-[700px]">
                     <div className="relative w-full h-full">
                       <video
                         ref={videoRef}
@@ -246,8 +246,8 @@ export function ObservationModal({
                           </div>
                         )}
                       </div>
-                      <p className="text-center mt-2">
-                        Video playback is restricted to this 3-second segment ({parseTimestamp(observation.timestamp) - 1}s - {parseTimestamp(observation.timestamp) + 1}s)
+                      <p className="text-center mt-1 text-xs px-2">
+                        Restricted to {parseTimestamp(observation.timestamp) - 1}s - {parseTimestamp(observation.timestamp) + 1}s
                       </p>
                     </div>
 
@@ -299,8 +299,8 @@ export function ObservationModal({
                   </div>
                   
                   {observation?.timestamp ? (
-                    <div className="mt-3 text-sm text-muted-foreground">
-                      <div className="flex items-center justify-center gap-4 bg-muted/30 p-3 rounded-lg">
+                    <div className="mt-2 text-xs sm:text-sm text-muted-foreground">
+                      <div className="flex items-center justify-center gap-3 bg-muted/30 p-2 rounded-lg">
                         <div className="flex flex-col items-center">
                           <span className="text-xs">{parseTimestamp(observation.timestamp) - 1}s</span>
                           <div className="h-4 w-1 bg-primary/30 mt-1"></div>
@@ -318,27 +318,26 @@ export function ObservationModal({
                       </div>
                     </div>
                   ) : (
-                    <div className="mt-3 text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg text-center">
-                      <p>No timestamp available for this observation.</p>
-                      <p className="mt-1">Full video playback is available.</p>
+                    <div className="mt-2 text-xs sm:text-sm text-muted-foreground bg-muted/30 p-2 rounded-lg text-center">
+                      <p>No timestamp available</p>
                     </div>
                   )}
                 </div>
 
                 {/* Observation details - moved below video on mobile */}
                 <div className="flex flex-col order-2 lg:order-1 mt-4 lg:mt-0">
-                  <h3 className="text-xl font-semibold mb-2">Observation</h3>
+                  <h3 className="text-lg font-semibold mb-1 sm:text-xl sm:mb-2">Observation</h3>
                   <div
                     className={cn(
-                      "p-4 rounded-lg mb-4",
+                      "p-3 rounded-lg mb-2 sm:p-4 sm:mb-4",
                       observation?.sentiment === "positive" &&
                         "bg-primary/10 border-l-4 border-primary",
                       observation?.sentiment === "negative" &&
                         "bg-destructive/10 border-l-4 border-destructive",
                     )}
                   >
-                    <p className="mb-2">{observation?.description}</p>
-                    <div className="flex flex-wrap justify-between items-center gap-2">
+                    <p className="mb-1 sm:mb-2">{observation?.description}</p>
+                    <div className="flex flex-wrap justify-between items-center gap-1 sm:gap-2">
                       <span className="text-sm text-muted-foreground">
                         {observation?.type}
                       </span>
@@ -354,8 +353,8 @@ export function ObservationModal({
                     </div>
                   </div>
 
-                  <div className="sticky bottom-0 bg-card py-3 border-t mt-auto lg:mt-4">
-                    <div className="flex justify-between items-center">
+                  <div className="sticky bottom-0 bg-card py-2 sm:py-3 border-t mt-auto lg:mt-4">
+                    <div className="flex justify-between items-center px-1">
                       <span className="text-sm text-muted-foreground">
                         {currentIndex + 1} of {observations.length}
                       </span>
