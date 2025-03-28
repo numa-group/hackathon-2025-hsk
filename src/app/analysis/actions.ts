@@ -37,7 +37,10 @@ interface AIResponse {
   }[];
 }
 
-export async function processVideoAnalysis(formData: FormData): Promise<{
+export async function processVideoAnalysis(
+  formData: FormData,
+  skipFileOperations: boolean = true
+): Promise<{
   success: boolean;
   message: string;
   analysis?: VideoAnalysis;
@@ -60,67 +63,75 @@ export async function processVideoAnalysis(formData: FormData): Promise<{
     const fileExtension = path.extname(originalFilename);
     const filenameWithoutExt = path.basename(originalFilename, fileExtension);
 
-    // Ensure the videos directory exists
-    const publicDir = path.join(process.cwd(), "public");
-    const videosDir = path.join(publicDir, "videos");
-
-    if (!fs.existsSync(videosDir)) {
-      await mkdir(videosDir, { recursive: true });
-    }
-
     // Define paths for the video and JSON files
     // Always use .mp4 extension for the output file
     const mp4Filename = `${filenameWithoutExt}.mp4`;
-    const videoPath = path.join(videosDir, mp4Filename);
-    const jsonPath = path.join(videosDir, `${filenameWithoutExt}.json`);
-
-    // Check if files already exist
-    if (fs.existsSync(videoPath)) {
-      console.log(`File ${mp4Filename} already exists, skipping this file.`);
-      return {
-        success: false,
-        message: `A file with the name ${mp4Filename} already exists and was skipped.`,
-        filename: originalFilename,
-      };
-    }
-
-    // Convert the file to a Buffer
-    const bytes = await file.arrayBuffer();
-    const buffer = Buffer.from(bytes);
-
-    // Create a temporary path for the original video
-    const tempOriginalPath = path.join(
-      videosDir,
-      `temp_original_${originalFilename}`,
-    );
-
-    // Save the original video file to temp location
-    await writeFile(tempOriginalPath, buffer);
-
-    // Compress the video using fluent-ffmpeg
-    await compressVideo(tempOriginalPath, videoPath);
-
-    // Remove the temporary original file
-    fs.unlinkSync(tempOriginalPath);
-
-    // Get the processed file size
-    const processedFileStats = fs.statSync(videoPath);
-    const processedFileSizeInMB = processedFileStats.size / (1024 * 1024);
-
-    // Read the processed file
-    const processedBuffer = fs.readFileSync(videoPath);
     let aiResponse;
+    
+    if (!skipFileOperations) {
+      // Ensure the videos directory exists
+      const publicDir = path.join(process.cwd(), "public");
+      const videosDir = path.join(publicDir, "videos");
 
-    if (processedFileSizeInMB > 20) {
-      // For files larger than 20MB, use the File API
-      aiResponse = await analyzeVideoWithFileAPI(
-        processedBuffer,
-        file.type,
-        mp4Filename,
+      if (!fs.existsSync(videosDir)) {
+        await mkdir(videosDir, { recursive: true });
+      }
+
+      const videoPath = path.join(videosDir, mp4Filename);
+      
+      // Check if files already exist
+      if (fs.existsSync(videoPath)) {
+        console.log(`File ${mp4Filename} already exists, skipping this file.`);
+        return {
+          success: false,
+          message: `A file with the name ${mp4Filename} already exists and was skipped.`,
+          filename: originalFilename,
+        };
+      }
+
+      // Convert the file to a Buffer
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+
+      // Create a temporary path for the original video
+      const tempOriginalPath = path.join(
+        videosDir,
+        `temp_original_${originalFilename}`,
       );
+
+      // Save the original video file to temp location
+      await writeFile(tempOriginalPath, buffer);
+
+      // Compress the video using fluent-ffmpeg
+      await compressVideo(tempOriginalPath, videoPath);
+
+      // Remove the temporary original file
+      fs.unlinkSync(tempOriginalPath);
+
+      // Get the processed file size
+      const processedFileStats = fs.statSync(videoPath);
+      const processedFileSizeInMB = processedFileStats.size / (1024 * 1024);
+
+      // Read the processed file
+      const processedBuffer = fs.readFileSync(videoPath);
+
+      if (processedFileSizeInMB > 20) {
+        // For files larger than 20MB, use the File API
+        aiResponse = await analyzeVideoWithFileAPI(
+          processedBuffer,
+          file.type,
+          mp4Filename,
+        );
+      } else {
+        // For smaller files, use base64 encoding
+        const base64Video = processedBuffer.toString("base64");
+        aiResponse = await analyzeVideoWithAI(base64Video, file.type);
+      }
     } else {
-      // For smaller files, use base64 encoding
-      const base64Video = processedBuffer.toString("base64");
+      // Skip file operations and directly analyze the video
+      const bytes = await file.arrayBuffer();
+      const buffer = Buffer.from(bytes);
+      const base64Video = buffer.toString("base64");
       aiResponse = await analyzeVideoWithAI(base64Video, file.type);
     }
 
@@ -142,8 +153,13 @@ export async function processVideoAnalysis(formData: FormData): Promise<{
       summary: generateSummary(aiObservations),
     };
 
-    // Save the analysis as JSON
-    await writeFile(jsonPath, JSON.stringify(analysis, null, 2));
+    // Save the analysis as JSON if not skipping file operations
+    if (!skipFileOperations) {
+      const publicDir = path.join(process.cwd(), "public");
+      const videosDir = path.join(publicDir, "videos");
+      const jsonPath = path.join(videosDir, `${filenameWithoutExt}.json`);
+      await writeFile(jsonPath, JSON.stringify(analysis, null, 2));
+    }
 
     return {
       success: true,
