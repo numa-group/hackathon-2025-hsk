@@ -247,7 +247,10 @@ export function ObservationModal({
                         )}
                       </div>
                       <p className="text-center mt-1 text-xs px-2">
-                        Restricted to {parseTimestamp(observation.timestamp) - 1}s - {parseTimestamp(observation.timestamp) + 1}s
+                        Restricted to{" "}
+                        {parseTimestamp(observation?.timestamp ?? "00:00") - 1}s
+                        -{" "}
+                        {parseTimestamp(observation?.timestamp ?? "00:00") + 1}s
                       </p>
                     </div>
 
@@ -297,22 +300,28 @@ export function ObservationModal({
                       </div>
                     </div>
                   </div>
-                  
+
                   {observation?.timestamp ? (
                     <div className="mt-2 text-xs sm:text-sm text-muted-foreground">
                       <div className="flex items-center justify-center gap-3 bg-muted/30 p-2 rounded-lg">
                         <div className="flex flex-col items-center">
-                          <span className="text-xs">{parseTimestamp(observation.timestamp) - 1}s</span>
+                          <span className="text-xs">
+                            {parseTimestamp(observation.timestamp) - 1}s
+                          </span>
                           <div className="h-4 w-1 bg-primary/30 mt-1"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
-                          <span className="font-medium text-primary">{parseTimestamp(observation.timestamp)}s</span>
+                          <span className="font-medium text-primary">
+                            {parseTimestamp(observation.timestamp)}s
+                          </span>
                           <div className="h-6 w-1 bg-primary mt-1"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
-                          <span className="text-xs">{parseTimestamp(observation.timestamp) + 1}s</span>
+                          <span className="text-xs">
+                            {parseTimestamp(observation.timestamp) + 1}s
+                          </span>
                           <div className="h-4 w-1 bg-primary/30 mt-1"></div>
                         </div>
                       </div>
@@ -326,7 +335,9 @@ export function ObservationModal({
 
                 {/* Observation details - moved below video on mobile */}
                 <div className="flex flex-col order-2 lg:order-1 mt-4 lg:mt-0">
-                  <h3 className="text-lg font-semibold mb-1 sm:text-xl sm:mb-2">Observation</h3>
+                  <h3 className="text-lg font-semibold mb-1 sm:text-xl sm:mb-2">
+                    Observation
+                  </h3>
                   <div
                     className={cn(
                       "p-3 rounded-lg mb-2 sm:p-4 sm:mb-4",
@@ -379,7 +390,6 @@ export function ObservationModal({
                     </div>
                   </div>
                 </div>
-
               </div>
             )}
           </motion.div>
