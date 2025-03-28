@@ -11,6 +11,7 @@ import { Video, ArrowRight, CheckCircle } from "lucide-react";
 import { useMemo } from "react";
 import { VerificationStatus, calculateVerificationStats } from "./status";
 import { AnimatePresence, motion } from "motion/react";
+import { LoadingOverlay } from "../loading-overlay";
 
 const CardContentMotion = motion(CardContent);
 export const VerificationScreen = ({
@@ -39,6 +40,7 @@ export const VerificationScreen = ({
 
   return (
     <div className="container max-w-md mx-auto py-8">
+      <LoadingOverlay isLoading={isLoading} />
       <Card className="gap-2">
         <CardHeader>
           <AnimatePresence mode="sync">

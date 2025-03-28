@@ -10,6 +10,7 @@ import {
   RecordedVideoDataNew,
   VideoRecorderNew,
 } from "../components/video-recorder-new";
+import { LoadingOverlay } from "../components/loading-overlay";
 
 // Mock data - initial checklist items
 const initialChecklistItems: ChecklistItem[] = [
@@ -116,6 +117,7 @@ export default function VerifyPage() {
   if (showRecorder) {
     return (
       <div className="flex items-center justify-center min-h-screen">
+        <LoadingOverlay isLoading={isLoading} message="Processing your video..." />
         <div className="container mx-auto p-4 max-w-3xl">
           <div className="h-[600px] bg-black rounded-lg overflow-hidden">
             <VideoRecorderNew
