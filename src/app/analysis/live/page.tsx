@@ -109,7 +109,7 @@ export default function LiveAnalysisPage() {
   return (
     <div className="container mx-auto py-4 px-4 sm:py-8 sm:px-6">
       <div className="flex flex-col gap-6">
-        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+        <div className="flex flex-col gap-4">
           <div>
             <h1 className="text-2xl sm:text-3xl font-bold">
               Live Video Analysis
@@ -119,10 +119,6 @@ export default function LiveAnalysisPage() {
               be saved when you leave this page.
             </p>
           </div>
-
-          {!isRecording && !isProcessing && (
-            <Button onClick={handleStartRecording}>Start Recording</Button>
-          )}
         </div>
 
         {statusMessage && (
@@ -155,7 +151,7 @@ export default function LiveAnalysisPage() {
                 onDone={handleRecordingDone}
                 onCancel={handleCancelRecording}
                 width="100%"
-                height="500px"
+                height="auto"
               />
             </CardContent>
           </Card>
@@ -182,10 +178,10 @@ export default function LiveAnalysisPage() {
                 <CardDescription>Recorded inspection footage</CardDescription>
               </CardHeader>
               <CardContent>
-                <div className="bg-muted rounded-lg flex items-center justify-center relative overflow-hidden h-[500px] aspect-[9/16] mx-auto">
+                <div className="bg-muted rounded-lg flex items-center justify-center relative w-full h-full mx-auto">
                   <video
                     src={analysis.videoUrl}
-                    className="h-full w-full rounded-lg object-contain"
+                    className="w-full h-auto rounded-lg"
                     controls
                     playsInline
                     autoPlay
