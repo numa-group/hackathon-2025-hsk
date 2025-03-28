@@ -435,7 +435,9 @@ export default function AnalysisPage() {
     <div className="container mx-auto py-4 px-4 sm:py-8 sm:px-6">
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-          <h1 className="text-2xl sm:text-3xl font-bold">Video Analysis</h1>
+          <h1 className="text-2xl sm:text-3xl font-bold">
+            <a href="/" className="hover:underline">Video Analysis</a>
+          </h1>
 
           <div className="flex flex-col sm:flex-row gap-2">
             <form

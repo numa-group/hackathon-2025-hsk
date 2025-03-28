@@ -12,10 +12,18 @@ interface VerificationResponse {
 }
 
 export async function processVideoVerification(
-  videoData: string, // Base64 encoded video data
+  formData: FormData,
   mimeType: string, // MIME type of the video
   checklistItems: ChecklistItem[],
 ): Promise<VerificationResponse> {
+  // Convert FormData to base64 string for Gemini API
+  const videoFile = formData.get('video') as File;
+  if (!videoFile) {
+    throw new Error("No video file found in FormData");
+  }
+  
+  const videoBuffer = await videoFile.arrayBuffer();
+  const videoBase64 = Buffer.from(videoBuffer).toString('base64');
   try {
     const genAI = new GoogleGenerativeAI(constants.GEMINI_API_KEY);
 
@@ -82,7 +90,7 @@ export async function processVideoVerification(
         {
           inlineData: {
             mimeType: mimeType,
-            data: videoData,
+            data: videoBase64,
           },
         },
         {

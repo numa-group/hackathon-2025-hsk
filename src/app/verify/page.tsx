@@ -5,8 +5,11 @@ import {
   VerificationScreen,
   VerificationScreenState,
 } from "../components/verification-screen";
-import { VideoRecorder, RecordedVideoData } from "../components/video-recorder";
 import { ChecklistItem } from "../components/checklist";
+import {
+  RecordedVideoDataNew,
+  VideoRecorderNew,
+} from "../components/video-recorder-new";
 
 // Mock data - initial checklist items
 const initialChecklistItems: ChecklistItem[] = [
@@ -47,7 +50,7 @@ export default function VerifyPage() {
     setShowRecorder(false);
   };
 
-  const handleVideoRecorded = async (videoData: RecordedVideoData) => {
+  const handleVideoRecorded = async (videoData: RecordedVideoDataNew) => {
     setShowRecorder(false);
     setIsLoading(true);
 
@@ -56,21 +59,16 @@ export default function VerifyPage() {
     setAttemptCount(newAttemptCount);
 
     try {
-      console.log(
-        "Processing video recording:",
-        videoData.file.name,
-        "Type:",
-        videoData.mimeType,
-      );
+      console.log("Processing video recording:", "Type:", videoData.mimeType);
 
       try {
-        // Convert the file to base64
-        const base64Data = await fileToBase64(videoData.file);
-        console.log("Base64 conversion successful");
+        // Create FormData and append the video blob
+        const formData = new FormData();
+        formData.append("video", videoData.blob, "recorded-video.mp4");
 
         // Use our server action to process the video
         const response = await processVideoVerification(
-          base64Data,
+          formData,
           videoData.mimeType,
           checklistItems,
         );
@@ -109,59 +107,6 @@ export default function VerifyPage() {
     }
   };
 
-  // Helper function to convert File to base64
-  const fileToBase64 = (file: File): Promise<string> => {
-    return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        try {
-          const result = reader.result;
-          if (typeof result !== "string") {
-            reject(new Error("FileReader result is not a string"));
-            return;
-          }
-
-          console.log("File read complete, data URL length:", result.length);
-
-          // Safely extract the base64 data part
-          // Data URLs are formatted as: data:[<mediatype>][;base64],<data>
-          const base64Match = result.match(/^data:.*;base64,(.*)$/);
-          if (!base64Match) {
-            console.error(
-              "Could not extract base64 data from:",
-              result.substring(0, 100) + "...",
-            );
-            reject(new Error("Invalid data URL format"));
-            return;
-          }
-
-          const base64Data = base64Match[1];
-          console.log("Extracted base64 data length:", base64Data.length);
-
-          resolve(base64Data);
-        } catch (error) {
-          console.error("Error in fileToBase64:", error);
-          reject(error);
-        }
-      };
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        reject(error);
-      };
-
-      // Log file details before reading
-      console.log(
-        "Reading file:",
-        file.name,
-        "Size:",
-        file.size,
-        "Type:",
-        file.type,
-      );
-      reader.readAsDataURL(file);
-    });
-  };
-
   const handleContinueClick = () => {
     // Reset to recording state to try again
     setShowRecorder(true);
@@ -173,7 +118,7 @@ export default function VerifyPage() {
       <div className="flex items-center justify-center min-h-screen">
         <div className="container mx-auto p-4 max-w-3xl">
           <div className="h-[600px] bg-black rounded-lg overflow-hidden">
-            <VideoRecorder
+            <VideoRecorderNew
               onDone={handleVideoRecorded}
               onCancel={handleCancelRecording}
               maxDuration={60} // 60 seconds max
@@ -190,9 +135,12 @@ export default function VerifyPage() {
       <div className="container mx-auto p-4 max-w-3xl">
         <VerificationScreen
           title={
-            screenState === "update"
-              ? "Continue Verification"
-              : "Video Verification"
+            // eslint-disable-next-line @next/next/no-html-link-for-pages
+            <a href="/" className="hover:underline">
+              {screenState === "update"
+                ? "Continue Verification"
+                : "Video Verification"}
+            </a>
           }
           description={
             screenState === "update"

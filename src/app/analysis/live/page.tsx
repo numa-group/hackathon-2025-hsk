@@ -86,7 +86,9 @@ export default function LiveAnalysisPage() {
     <div className="container mx-auto py-4 px-4 sm:py-8 sm:px-6">
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
-          <h1 className="text-xl font-medium">Live Analysis</h1>
+          <h1 className="text-xl font-medium">
+            <a href="/" className="hover:underline">Live Analysis</a>
+          </h1>
           <p className="text-xs text-muted-foreground">
             Recordings stored locally
           </p>
