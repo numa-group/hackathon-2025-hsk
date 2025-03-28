@@ -25,10 +25,10 @@ export const VideoRecorderNew = ({
   } = useRecordWebcam({
     options: {
       fileName: `recording-${Date.now()}`,
-      fileType: "webm",
+      fileType: "mp4",
     },
     mediaRecorderOptions: {
-      mimeType: "video/webm;codecs=vp8,opus",
+      mimeType: "video/mp4",
     },
   });
 
@@ -89,7 +89,7 @@ export const VideoRecorderNew = ({
       await clearAllRecordings();
       onDone({
         blob: result,
-        mimeType: "video/webm",
+        mimeType: "video/mp4",
         url: URL.createObjectURL(result),
       });
     } catch (error) {
