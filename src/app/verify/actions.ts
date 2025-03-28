@@ -72,7 +72,10 @@ export async function processVideoVerification(
     } as any);
 
     // Create checklist items for the prompt
-    const checklistForPrompt = checklistItems;
+    const checklistForPrompt = checklistItems.map((v) => ({
+      ...v,
+      status: "unverified",
+    }));
     // Generate content using the video data
     const result = await model.generateContent(
       [

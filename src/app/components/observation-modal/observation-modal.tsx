@@ -185,6 +185,7 @@ export function ObservationModal({
                       ref={videoRef}
                       src={videoUrl}
                       className="w-full h-full object-contain"
+                      playsInline
                       controls
                     >
                       Your browser does not support the video tag.
@@ -203,6 +204,7 @@ export function ObservationModal({
                         ref={videoRef}
                         src={videoUrl}
                         className="w-full h-full object-contain"
+                        playsInline
                         autoPlay
                         loop
                         onClick={() => {

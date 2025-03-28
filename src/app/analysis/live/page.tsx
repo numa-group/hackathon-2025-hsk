@@ -33,10 +33,6 @@ export default function LiveAnalysisPage() {
   }) => {
     setIsRecording(false);
     setIsProcessing(true);
-    setStatusMessage({
-      text: "Processing video... This may take a few minutes.",
-      type: "info",
-    });
 
     try {
       // Create a File object from the Blob
@@ -66,10 +62,6 @@ export default function LiveAnalysisPage() {
         };
 
         setAnalysis(localAnalysis);
-        setStatusMessage({
-          text: "Video processed successfully!",
-          type: "success",
-        });
       } else {
         setStatusMessage({
           text: `Error: ${result.message}`,
@@ -88,7 +80,6 @@ export default function LiveAnalysisPage() {
 
   const handleCancelRecording = () => {
     setIsRecording(false);
-    setStatusMessage(null);
   };
 
   return (
