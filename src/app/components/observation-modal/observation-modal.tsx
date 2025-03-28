@@ -154,14 +154,14 @@ export function ObservationModal({
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           exit={{ opacity: 0 }}
-          className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-2"
+          className="fixed inset-0 z-50 flex items-start justify-center bg-black/80 p-2 overflow-y-auto pt-10 sm:pt-16 lg:pt-20"
         >
           <motion.div
             initial={{ scale: 0.9, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
             exit={{ scale: 0.9, opacity: 0 }}
             className={cn(
-              "relative rounded-lg bg-card shadow-lg overflow-auto",
+              "relative rounded-lg bg-card shadow-lg overflow-auto max-h-[90vh] sm:max-h-[85vh]",
               isFullVideoMode ? "w-full max-w-4xl" : "w-full max-w-7xl",
             )}
           >
@@ -179,12 +179,12 @@ export function ObservationModal({
               // Full video mode - just show the video player
               <div className="p-6">
                 <h3 className="text-xl font-semibold mb-4">Video Preview</h3>
-                <div className="bg-black rounded-lg overflow-hidden relative">
+                <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto sm:h-[500px] lg:h-[600px] xl:h-[700px]">
                   <div className="relative w-full h-full">
                     <video
                       ref={videoRef}
                       src={videoUrl}
-                      className="w-full h-full object-contain max-h-[800px]"
+                      className="w-full h-full object-contain"
                       controls
                     >
                       Your browser does not support the video tag.
@@ -194,69 +194,15 @@ export function ObservationModal({
               </div>
             ) : (
               // Observation mode - show observation details and restricted video
-              <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 p-6 h-full">
-                {/* Observation details */}
-                <div className="flex flex-col">
-                  <h3 className="text-xl font-semibold mb-2">Observation</h3>
-                  <div
-                    className={cn(
-                      "p-4 rounded-lg mb-4 flex-1",
-                      observation?.sentiment === "positive" &&
-                        "bg-primary/10 border-l-4 border-primary",
-                      observation?.sentiment === "negative" &&
-                        "bg-destructive/10 border-l-4 border-destructive",
-                    )}
-                  >
-                    <p className="mb-2">{observation?.description}</p>
-                    <div className="flex justify-between items-center">
-                      <span className="text-sm text-muted-foreground">
-                        {observation?.type}
-                      </span>
-                      {observation?.timestamp ? (
-                        <span className="inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
-                          {observation.timestamp}
-                        </span>
-                      ) : (
-                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
-                          No timestamp
-                        </span>
-                      )}
-                    </div>
-                  </div>
-
-                  <div className="flex justify-between mt-auto">
-                    <span className="text-sm text-muted-foreground">
-                      {currentIndex + 1} of {observations.length}
-                    </span>
-                    <div className="flex gap-2">
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={onPrevious}
-                        disabled={currentIndex === 0}
-                      >
-                        <ChevronLeft className="h-4 w-4" />
-                      </Button>
-                      <Button
-                        variant="outline"
-                        size="icon"
-                        onClick={onNext}
-                        disabled={currentIndex === observations.length - 1}
-                      >
-                        <ChevronRight className="h-4 w-4" />
-                      </Button>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Video player */}
-                <div className="flex flex-col h-full">
-                  <div className="bg-black rounded-lg overflow-hidden flex-1 relative">
+              <div className="flex flex-col lg:grid lg:grid-cols-2 gap-4 sm:gap-6 p-4 sm:p-6">
+                {/* Video player - moved to top on mobile */}
+                <div className="flex flex-col order-1 lg:order-2">
+                  <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto sm:h-[500px] lg:h-[600px] xl:h-[700px]">
                     <div className="relative w-full h-full">
                       <video
                         ref={videoRef}
                         src={videoUrl}
-                        className="w-full h-full object-contain max-h-[600px]"
+                        className="w-full h-full object-contain"
                         autoPlay
                         loop
                         onClick={() => {
@@ -300,6 +246,9 @@ export function ObservationModal({
                           </div>
                         )}
                       </div>
+                      <p className="text-center mt-2">
+                        Video playback is restricted to this 3-second segment ({parseTimestamp(observation.timestamp) - 1}s - {parseTimestamp(observation.timestamp) + 1}s)
+                      </p>
                     </div>
 
                     {/* Custom progress bar with timestamp highlight */}
@@ -348,43 +297,90 @@ export function ObservationModal({
                       </div>
                     </div>
                   </div>
+                  
                   {observation?.timestamp ? (
-                    <div className="mt-4 text-sm text-muted-foreground">
+                    <div className="mt-3 text-sm text-muted-foreground">
                       <div className="flex items-center justify-center gap-4 bg-muted/30 p-3 rounded-lg">
                         <div className="flex flex-col items-center">
-                          <span className="text-xs">
-                            {parseTimestamp(observation.timestamp) - 1}s
-                          </span>
+                          <span className="text-xs">{parseTimestamp(observation.timestamp) - 1}s</span>
                           <div className="h-4 w-1 bg-primary/30 mt-1"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
-                          <span className="font-medium text-primary">
-                            {parseTimestamp(observation.timestamp)}s
-                          </span>
+                          <span className="font-medium text-primary">{parseTimestamp(observation.timestamp)}s</span>
                           <div className="h-6 w-1 bg-primary mt-1"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
-                          <span className="text-xs">
-                            {parseTimestamp(observation.timestamp) + 1}s
-                          </span>
+                          <span className="text-xs">{parseTimestamp(observation.timestamp) + 1}s</span>
                           <div className="h-4 w-1 bg-primary/30 mt-1"></div>
                         </div>
                       </div>
-                      <p className="text-center mt-2">
-                        Video playback is restricted to this 3-second segment (
-                        {parseTimestamp(observation.timestamp) - 1}s -{" "}
-                        {parseTimestamp(observation.timestamp) + 1}s)
-                      </p>
                     </div>
                   ) : (
-                    <div className="mt-4 text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg text-center">
+                    <div className="mt-3 text-sm text-muted-foreground bg-muted/30 p-3 rounded-lg text-center">
                       <p>No timestamp available for this observation.</p>
-                      <p>Full video playback is available.</p>
+                      <p className="mt-1">Full video playback is available.</p>
                     </div>
                   )}
                 </div>
+
+                {/* Observation details - moved below video on mobile */}
+                <div className="flex flex-col order-2 lg:order-1 mt-4 lg:mt-0">
+                  <h3 className="text-xl font-semibold mb-2">Observation</h3>
+                  <div
+                    className={cn(
+                      "p-4 rounded-lg mb-4",
+                      observation?.sentiment === "positive" &&
+                        "bg-primary/10 border-l-4 border-primary",
+                      observation?.sentiment === "negative" &&
+                        "bg-destructive/10 border-l-4 border-destructive",
+                    )}
+                  >
+                    <p className="mb-2">{observation?.description}</p>
+                    <div className="flex flex-wrap justify-between items-center gap-2">
+                      <span className="text-sm text-muted-foreground">
+                        {observation?.type}
+                      </span>
+                      {observation?.timestamp ? (
+                        <span className="inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
+                          {observation.timestamp}
+                        </span>
+                      ) : (
+                        <span className="inline-flex items-center rounded-full bg-muted px-2 py-1 text-xs font-medium text-muted-foreground">
+                          No timestamp
+                        </span>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="sticky bottom-0 bg-card py-3 border-t mt-auto lg:mt-4">
+                    <div className="flex justify-between items-center">
+                      <span className="text-sm text-muted-foreground">
+                        {currentIndex + 1} of {observations.length}
+                      </span>
+                      <div className="flex gap-2">
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={onPrevious}
+                          disabled={currentIndex === 0}
+                        >
+                          <ChevronLeft className="h-4 w-4" />
+                        </Button>
+                        <Button
+                          variant="outline"
+                          size="icon"
+                          onClick={onNext}
+                          disabled={currentIndex === observations.length - 1}
+                        >
+                          <ChevronRight className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
               </div>
             )}
           </motion.div>
