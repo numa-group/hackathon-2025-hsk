@@ -13,6 +13,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Button } from "@/components/ui/button";
 import { VideoRecorderNew } from "@/app/components/video-recorder-new";
+import { ObservationModal } from "@/app/components/observation-modal";
 import {
   processVideoAnalysis,
   AnalysisObservation,
@@ -27,6 +28,9 @@ export default function LiveAnalysisPage() {
     text: string;
     type: "info" | "success" | "error";
   } | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [selectedObservation, setSelectedObservation] = useState<AnalysisObservation | null>(null);
+  const [currentObservationIndex, setCurrentObservationIndex] = useState(0);
 
   const handleStartRecording = () => {
     setIsRecording(true);
@@ -208,9 +212,16 @@ export default function LiveAnalysisPage() {
                       <div className="flex justify-between items-start">
                         <p>{observation.description}</p>
                         {observation.timestamp && (
-                          <span className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary">
+                          <button
+                            onClick={() => {
+                              setSelectedObservation(observation);
+                              setCurrentObservationIndex(analysis.aiObservations.indexOf(observation));
+                              setIsModalOpen(true);
+                            }}
+                            className="ml-2 inline-flex items-center rounded-full bg-primary/20 px-2 py-1 text-xs font-medium text-primary hover:bg-primary/30 transition-colors"
+                          >
                             {observation.timestamp || "N/A"}
-                          </span>
+                          </button>
                         )}
                       </div>
                       <p className="text-xs text-muted-foreground mt-1">
@@ -262,6 +273,32 @@ export default function LiveAnalysisPage() {
           </Card>
         )}
       </div>
+
+      {/* Observation Modal */}
+      {analysis && (
+        <ObservationModal
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          observation={selectedObservation}
+          videoUrl={analysis.videoUrl}
+          observations={analysis.aiObservations}
+          currentIndex={currentObservationIndex}
+          onNext={() => {
+            if (!analysis) return;
+            const observations = analysis.aiObservations;
+            const nextIndex = (currentObservationIndex + 1) % observations.length;
+            setCurrentObservationIndex(nextIndex);
+            setSelectedObservation(observations[nextIndex]);
+          }}
+          onPrevious={() => {
+            if (!analysis) return;
+            const observations = analysis.aiObservations;
+            const prevIndex = (currentObservationIndex - 1 + observations.length) % observations.length;
+            setCurrentObservationIndex(prevIndex);
+            setSelectedObservation(observations[prevIndex]);
+          }}
+        />
+      )}
     </div>
   );
 }
