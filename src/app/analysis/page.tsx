@@ -436,7 +436,10 @@ export default function AnalysisPage() {
       <div className="flex flex-col gap-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <h1 className="text-2xl sm:text-3xl font-bold">
-            <a href="/" className="hover:underline">Video Analysis</a>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/" className="hover:underline">
+              Video Analysis
+            </a>
           </h1>
 
           <div className="flex flex-col sm:flex-row gap-2">

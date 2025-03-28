@@ -87,7 +87,10 @@ export default function LiveAnalysisPage() {
       <div className="flex flex-col gap-4">
         <div className="flex items-center justify-between">
           <h1 className="text-xl font-medium">
-            <a href="/" className="hover:underline">Live Analysis</a>
+            {/* eslint-disable-next-line @next/next/no-html-link-for-pages */}
+            <a href="/" className="hover:underline">
+              Live Analysis
+            </a>
           </h1>
           <p className="text-xs text-muted-foreground">
             Recordings stored locally
