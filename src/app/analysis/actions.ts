@@ -8,6 +8,7 @@ import { writeFile, mkdir } from "fs/promises";
 import { v4 as uuidv4 } from "uuid";
 import { constants } from "../verify/constants";
 import ffmpeg from "fluent-ffmpeg";
+import { manualObservations } from "./manual-observations";
 
 // Define the response types
 export interface AnalysisObservation {
@@ -426,7 +427,16 @@ export async function loadAllAnalyses(): Promise<
     const analyses = jsonFiles.map((file) => {
       const filePath = path.join(videosDir, file);
       const fileContent = fs.readFileSync(filePath, "utf8");
-      return JSON.parse(fileContent) as VideoAnalysis;
+      const analysis = JSON.parse(fileContent) as VideoAnalysis;
+
+      // Import is done at the top level, so we can use manualObservations directly
+      console.log("TITLE: ", analysis.title);
+      const matchingObservations = manualObservations[analysis.title] || [];
+
+      return {
+        ...analysis,
+        manualObservations: matchingObservations,
+      };
     });
 
     return analyses;

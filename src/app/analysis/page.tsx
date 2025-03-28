@@ -27,10 +27,11 @@ import {
   VideoAnalysis,
   AnalysisObservation,
 } from "./actions";
-import { manualObservations } from "./manual-observations";
 
 export default function AnalysisPage() {
-  const [analyses, setAnalyses] = useState<VideoAnalysis[]>([]);
+  const [analyses, setAnalyses] = useState<
+    (VideoAnalysis & { manualObservations: AnalysisObservation[] })[]
+  >([]);
   const [selectedVideoId, setSelectedVideoId] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
@@ -43,33 +44,15 @@ export default function AnalysisPage() {
 
   const selectedVideo = analyses.find((video) => video.id === selectedVideoId);
 
-  // Get the base filename without extension to match with manual observations
-  const getBaseFilename = (filename: string): string => {
-    // Remove file extension if present
-    return filename.replace(/\.[^/.]+$/, "");
-  };
-
   // Load all analyses on component mount
   useEffect(() => {
     async function fetchAnalyses() {
       const allAnalyses = await loadAllAnalyses();
-
-      // Apply manual observations to each analysis if available
-      const updatedAnalyses = allAnalyses.map((analysis) => {
-        const baseFilename = getBaseFilename(analysis.title);
-        const matchingObservations = manualObservations[baseFilename] || [];
-
-        return {
-          ...analysis,
-          manualObservations: matchingObservations,
-        };
-      });
-
-      setAnalyses(updatedAnalyses);
+      setAnalyses(allAnalyses);
 
       // Select the first video if available and none is selected
-      if (updatedAnalyses.length > 0 && !selectedVideoId) {
-        setSelectedVideoId(updatedAnalyses[0].id);
+      if (allAnalyses.length > 0 && !selectedVideoId) {
+        setSelectedVideoId(allAnalyses[0].id);
       }
     }
 

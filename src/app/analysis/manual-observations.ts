@@ -1,279 +1,285 @@
 import { AnalysisObservation } from "./actions";
 
-// Manual observations as Record<id, AnalysisObservation[]>
+// Manual observations as Record<id, AnalysisObservation[]> with spaces instead of underscores
 export const manualObservations: Record<string, AnalysisObservation[]> = {
-  "IMG_3886": [
+  "IMG 3886": [
     {
-      id: "IMG_3886_1",
+      id: "IMG 3886 1",
       description: "Dirty coffee cups, dirty glass, dust on Nespresso machine",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3885": [
+  "IMG 3885": [
     {
-      id: "IMG_3885_1",
+      id: "IMG 3885 1",
       description: "Dust on the smoke detector",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3884": [
+  "IMG 3884": [
     {
-      id: "IMG_3884_1",
-      description: "Toilet had dirty stains at the back, sink counter had dirty rings",
+      id: "IMG 3884 1",
+      description:
+        "Toilet had dirty stains at the back, sink counter had dirty rings",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3883": [
+  "IMG 3883": [
     {
-      id: "IMG_3883_1",
-      description: "Dirty floor, hair on floor, unclean towels, dusty mirror, dirty sink",
+      id: "IMG 3883 1",
+      description:
+        "Dirty floor, hair on floor, unclean towels, dusty mirror, dirty sink",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3881": [
+  "IMG 3881": [
     {
-      id: "IMG_3881_1",
-      description: "Bottles, dirty chairs, dirty tables, unmade bed, unclean floor",
+      id: "IMG 3881 1",
+      description:
+        "Bottles, dirty chairs, dirty tables, unmade bed, unclean floor",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3881_2",
+      id: "IMG 3881 2",
       description: "Unauthorized items in fridge",
       sentiment: "negative",
       type: "styling",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3880": [
+  "IMG 3880": [
     {
-      id: "IMG_3880_1",
+      id: "IMG 3880 1",
       description: "Dirty buttons on AC",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3879": [
+  "IMG 3879": [
     {
-      id: "IMG_3879_1",
+      id: "IMG 3879 1",
       description: "Stains on roof",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3879_2",
+      id: "IMG 3879 2",
       description: "Light connector hanging loose",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3878": [
+  "IMG 3878": [
     {
-      id: "IMG_3878_1",
+      id: "IMG 3878 1",
       description: "Damaged line on the floor",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3877": [
+  "IMG 3877": [
     {
-      id: "IMG_3877_1",
+      id: "IMG 3877 1",
       description: "Untidy bedding arrangement",
       sentiment: "negative",
       type: "styling",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3876": [
+  "IMG 3876": [
     {
-      id: "IMG_3876_1",
+      id: "IMG 3876 1",
       description: "Dirty spec found on bed linen",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3874": [
+  "IMG 3874": [
     {
-      id: "IMG_3874_1",
+      id: "IMG 3874 1",
       description: "Light connector not attached to ceiling",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3872": [
+  "IMG 3872": [
     {
-      id: "IMG_3872_1",
-      description: "Dirty tap top, dusty mirror, shower wall not dry and appears dirty",
+      id: "IMG 3872 1",
+      description:
+        "Dirty tap top, dusty mirror, shower wall not dry and appears dirty",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3872_2",
-      description: "Damaged carpet, damaged bathroom tiles, ceiling needs maintenance, chipped wall next to mirror",
+      id: "IMG 3872 2",
+      description:
+        "Damaged carpet, damaged bathroom tiles, ceiling needs maintenance, chipped wall next to mirror",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3870": [
+  "IMG 3870": [
     {
-      id: "IMG_3870_1",
+      id: "IMG 3870 1",
       description: "Tap fitting misaligned with wall space",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3869": [
+  "IMG 3869": [
     {
-      id: "IMG_3869_1",
+      id: "IMG 3869 1",
       description: "Dirt in pots cupboard and pan cupboards",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3869_2",
+      id: "IMG 3869 2",
       description: "Discoloration on wall next to stove",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3868": [
+  "IMG 3868": [
     {
-      id: "IMG_3868_1",
+      id: "IMG 3868 1",
       description: "Hair on the bed",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3867": [
+  "IMG 3867": [
     {
-      id: "IMG_3867_1",
+      id: "IMG 3867 1",
       description: "Dirt line on the wall",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3867_2",
+      id: "IMG 3867 2",
       description: "Chipped counter and bubbles on the wall",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3866": [
+  "IMG 3866": [
     {
-      id: "IMG_3866_1",
+      id: "IMG 3866 1",
       description: "Dusty air filter, hair on wall",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3866_2",
-      description: "Broken shower gel/shampoo container on floor, black mold inside shower, orange discoloration, missing sealant causing leaks",
+      id: "IMG 3866 2",
+      description:
+        "Broken shower gel/shampoo container on floor, black mold inside shower, orange discoloration, missing sealant causing leaks",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3865": [
+  "IMG 3865": [
     {
-      id: "IMG_3865_1",
+      id: "IMG 3865 1",
       description: "Discoloration on wall above taps",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3859": [
+  "IMG 3859": [
     {
-      id: "IMG_3859_1",
+      id: "IMG 3859 1",
       description: "Correct styling of water",
       sentiment: "positive",
       type: "styling",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3858": [
+  "IMG 3858": [
     {
-      id: "IMG_3858_1",
+      id: "IMG 3858 1",
       description: "Incorrect styling of coffee section",
       sentiment: "negative",
       type: "styling",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3857": [
+  "IMG 3857": [
     {
-      id: "IMG_3857_1",
+      id: "IMG 3857 1",
       description: "White stain on steel in shower corner",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3855": [
+  "IMG 3855": [
     {
-      id: "IMG_3855_1",
+      id: "IMG 3855 1",
       description: "Shower is clean",
       sentiment: "positive",
       type: "cleanliness",
-      timestamp: ""
+      timestamp: "",
     },
     {
-      id: "IMG_3855_2",
+      id: "IMG 3855 2",
       description: "Broken holder - bottles on floor instead of in holder",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3853": [
+  "IMG 3853": [
     {
-      id: "IMG_3853_1",
+      id: "IMG 3853 1",
       description: "Dirty and dusty air filter",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3850": [
+  "IMG 3850": [
     {
-      id: "IMG_3850_1",
+      id: "IMG 3850 1",
       description: "Toilet stains at back and on bowl",
       sentiment: "negative",
       type: "cleanliness",
-      timestamp: ""
-    }
+      timestamp: "",
+    },
   ],
-  "IMG_3844": [
+  "IMG 3844": [
     {
-      id: "IMG_3844_1",
+      id: "IMG 3844 1",
       description: "Broken bottle container for shower",
       sentiment: "negative",
       type: "maintenance",
-      timestamp: ""
-    }
-  ]
+      timestamp: "",
+    },
+  ],
 };
