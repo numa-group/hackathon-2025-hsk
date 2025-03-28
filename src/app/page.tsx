@@ -43,11 +43,33 @@ export default function Home() {
             </div>
           </main>
 
-          <Link href="/verify">
-            <Button size="lg" variant="link">
-              Lets gooooo
-            </Button>
-          </Link>
+          <div className="flex flex-col items-center gap-4 w-full max-w-md">
+            <Link href="/analysis" className="w-full">
+              <Button size="lg" variant="default" className="w-full">
+                Video Analysis
+              </Button>
+            </Link>
+            
+            <div className="flex gap-4 w-full">
+              <Link href="/analysis/live" className="flex-1">
+                <Button size="lg" variant="secondary" className="w-full">
+                  Live Analysis
+                </Button>
+              </Link>
+              
+              <Link href="/components" className="flex-1">
+                <Button size="lg" variant="outline" className="w-full text-muted-foreground">
+                  Components
+                </Button>
+              </Link>
+            </div>
+            
+            <Link href="/verify" className="w-full">
+              <Button size="lg" variant="ghost" className="w-full">
+                Verification
+              </Button>
+            </Link>
+          </div>
 
           <footer className="text-center text-sm text-muted-foreground">
             <p>© 2025 NUMA</p>

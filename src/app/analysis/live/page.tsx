@@ -108,17 +108,12 @@ export default function LiveAnalysisPage() {
 
   return (
     <div className="container mx-auto py-4 px-4 sm:py-8 sm:px-6">
-      <div className="flex flex-col gap-6">
-        <div className="flex flex-col gap-4">
-          <div>
-            <h1 className="text-2xl sm:text-3xl font-bold">
-              Live Video Analysis
-            </h1>
-            <p className="text-sm text-muted-foreground mt-1">
-              Note: Recordings are stored locally in your browser and will not
-              be saved when you leave this page.
-            </p>
-          </div>
+      <div className="flex flex-col gap-4">
+        <div className="flex items-center justify-between">
+          <h1 className="text-xl font-medium">Live Analysis</h1>
+          <p className="text-xs text-muted-foreground">
+            Recordings stored locally
+          </p>
         </div>
 
         {statusMessage && (
@@ -142,9 +137,8 @@ export default function LiveAnalysisPage() {
 
         {isRecording ? (
           <Card>
-            <CardHeader>
-              <CardTitle>Recording</CardTitle>
-              <CardDescription>Record your property inspection</CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Recording</CardTitle>
             </CardHeader>
             <CardContent>
               <VideoRecorderNew
@@ -157,9 +151,8 @@ export default function LiveAnalysisPage() {
           </Card>
         ) : isProcessing ? (
           <Card>
-            <CardHeader>
-              <CardTitle>Processing</CardTitle>
-              <CardDescription>Analyzing your video</CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Processing</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-[500px]">
               <div className="flex flex-col items-center gap-4">
@@ -173,9 +166,8 @@ export default function LiveAnalysisPage() {
         ) : analysis ? (
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
             <Card>
-              <CardHeader>
-                <CardTitle>Video</CardTitle>
-                <CardDescription>Recorded inspection footage</CardDescription>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Video</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="bg-muted rounded-lg flex items-center justify-center relative w-full h-full mx-auto">
@@ -194,11 +186,8 @@ export default function LiveAnalysisPage() {
             </Card>
 
             <Card>
-              <CardHeader>
-                <CardTitle>AI Observations</CardTitle>
-                <CardDescription>
-                  Analysis of the property condition
-                </CardDescription>
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base">Observations</CardTitle>
               </CardHeader>
               <CardContent>
                 <ScrollArea className="h-[350px] pr-4">
@@ -247,12 +236,8 @@ export default function LiveAnalysisPage() {
           </div>
         ) : (
           <Card>
-            <CardHeader>
-              <CardTitle>Ready to Record</CardTitle>
-              <CardDescription>
-                Click the Start Recording button to begin your property
-                inspection
-              </CardDescription>
+            <CardHeader className="pb-2">
+              <CardTitle className="text-base">Ready to Record</CardTitle>
             </CardHeader>
             <CardContent className="flex items-center justify-center h-[500px] bg-muted/50 rounded-lg">
               <div className="text-center">
@@ -273,10 +258,9 @@ export default function LiveAnalysisPage() {
                     <rect x="3" y="6" width="12" height="12" rx="2" ry="2" />
                   </svg>
                 </div>
-                <h3 className="text-lg font-medium">No Recording Yet</h3>
-                <p className="text-muted-foreground mt-2 max-w-md">
-                  Record a video of your property inspection and our AI will
-                  analyze it for cleanliness and maintenance observations.
+                <h3 className="text-base font-medium">No Recording Yet</h3>
+                <p className="text-muted-foreground mt-2 text-sm max-w-md">
+                  Record your property for AI analysis
                 </p>
                 <Button onClick={handleStartRecording} className="mt-4">
                   Start Recording

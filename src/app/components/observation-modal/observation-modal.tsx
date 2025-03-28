@@ -256,12 +256,12 @@ export function ObservationModal({
 
                     {/* Custom progress bar with timestamp highlight */}
                     <div className="absolute bottom-4 left-0 right-0 px-4 pointer-events-none">
-                      <div className="relative w-full h-2 bg-muted/30 rounded-full overflow-hidden">
+                      <div className="relative w-full h-3 bg-black/50 rounded-full overflow-hidden border border-muted/50">
                         {videoRef.current && observation?.timestamp && (
                           <>
                             {/* Timestamp marker */}
                             <div
-                              className="absolute top-0 bottom-0 w-[6px] bg-primary z-10"
+                              className="absolute top-0 bottom-0 w-[6px] bg-green-500 z-10 shadow-[0_0_12px_4px_rgba(22,163,74,0.9)] dark:shadow-[0_0_20px_6px_rgba(22,163,74,1)]"
                               style={{
                                 left: `${(parseTimestamp(observation.timestamp) / (videoRef.current?.duration || 100)) * 100}%`,
                                 transform: "translateX(-50%)",
@@ -270,7 +270,7 @@ export function ObservationModal({
 
                             {/* Highlighted range */}
                             <div
-                              className="absolute top-0 bottom-0 bg-primary/30 border-l border-r border-primary/50"
+                              className="absolute top-0 bottom-0 bg-green-500/50 border-l-2 border-r-2 border-green-600 shadow-[0_0_15px_5px_rgba(22,163,74,0.7)] dark:shadow-[0_0_20px_8px_rgba(22,163,74,0.9)]"
                               style={{
                                 left: `${((parseTimestamp(observation.timestamp) - 1) / (videoRef.current?.duration || 100)) * 100}%`,
                                 width: `${(2 / (videoRef.current?.duration || 100)) * 100}%`,
@@ -278,7 +278,7 @@ export function ObservationModal({
                             >
                               {/* Progress indicator within highlight */}
                               <div
-                                className="absolute top-0 bottom-0 left-0 bg-primary/50"
+                                className="absolute top-0 bottom-0 left-0 bg-green-600/80 shadow-inner shadow-green-700"
                                 style={{
                                   width: `${Math.max(0, Math.min(100, (((videoRef.current?.currentTime || 0) - (parseTimestamp(observation.timestamp) - 1)) / 2) * 100))}%`,
                                 }}
@@ -287,7 +287,7 @@ export function ObservationModal({
 
                             {/* Timestamp label */}
                             <div
-                              className="absolute top-[-24px] bg-primary/20 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs font-medium text-primary border border-primary/30"
+                              className="absolute top-[-28px] bg-green-500/30 backdrop-blur-sm px-2 py-0.5 rounded-full text-xs font-medium text-green-700 dark:text-green-400 border border-green-600 shadow-[0_0_10px_3px_rgba(22,163,74,0.6)] dark:shadow-[0_0_15px_5px_rgba(22,163,74,0.8)]"
                               style={{
                                 left: `${(parseTimestamp(observation.timestamp) / (videoRef.current?.duration || 100)) * 100}%`,
                                 transform: "translateX(-50%)",
@@ -308,21 +308,21 @@ export function ObservationModal({
                           <span className="text-xs">
                             {parseTimestamp(observation.timestamp) - 1}s
                           </span>
-                          <div className="h-4 w-1 bg-primary/30 mt-1"></div>
+                          <div className="h-4 w-1 bg-green-500/50 mt-1"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
-                          <span className="font-medium text-primary">
+                          <span className="font-medium text-green-600 dark:text-green-400">
                             {parseTimestamp(observation.timestamp)}s
                           </span>
-                          <div className="h-6 w-1 bg-primary mt-1"></div>
+                          <div className="h-6 w-2 bg-green-500 mt-1 rounded-full"></div>
                         </div>
 
                         <div className="flex flex-col items-center">
                           <span className="text-xs">
                             {parseTimestamp(observation.timestamp) + 1}s
                           </span>
-                          <div className="h-4 w-1 bg-primary/30 mt-1"></div>
+                          <div className="h-4 w-1 bg-green-500/50 mt-1"></div>
                         </div>
                       </div>
                     </div>
