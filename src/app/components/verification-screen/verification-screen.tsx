@@ -109,7 +109,7 @@ export const VerificationScreen = ({
                 ) : (
                   <>
                     <ArrowRight className="mr-2 h-4 w-4" />
-                    Continue Verification
+                    Restart Verification
                   </>
                 )}
               </div>

@@ -117,7 +117,10 @@ export default function VerifyPage() {
   if (showRecorder) {
     return (
       <div className="flex items-center justify-center min-h-screen">
-        <LoadingOverlay isLoading={isLoading} message="Processing your video..." />
+        <LoadingOverlay
+          isLoading={isLoading}
+          message="Processing your video..."
+        />
         <div className="container mx-auto p-4 max-w-3xl">
           <div className="h-[600px] bg-black rounded-lg overflow-hidden">
             <VideoRecorderNew
@@ -140,7 +143,7 @@ export default function VerifyPage() {
             // eslint-disable-next-line @next/next/no-html-link-for-pages
             <a href="/" className="hover:underline">
               {screenState === "update"
-                ? "Continue Verification"
+                ? "Restart Verification"
                 : "Video Verification"}
             </a>
           }
