@@ -153,6 +153,7 @@ export default function LiveAnalysisPage() {
                     className="w-full h-auto rounded-lg"
                     controls
                     playsInline
+                    muted
                     autoPlay
                     loop
                   >

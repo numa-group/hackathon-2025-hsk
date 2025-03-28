@@ -118,14 +118,15 @@ export default function AnalysisPage() {
     async function fetchAnalyses() {
       try {
         // Get the base URL for the current environment
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const baseUrl =
+          typeof window !== "undefined" ? window.location.origin : "";
         const allAnalyses = await loadAllAnalyses(baseUrl);
-        
+
         if (allAnalyses.length === 0) {
           console.log("No analyses found");
           return;
         }
-        
+
         setAnalyses(allAnalyses);
 
         // Select the first video if available and none is selected
@@ -356,7 +357,8 @@ export default function AnalysisPage() {
 
         // Only refresh the analyses list after successful upload
         // This is done without causing a full page reload
-        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const baseUrl =
+          typeof window !== "undefined" ? window.location.origin : "";
         const updatedAnalyses = await loadAllAnalyses(baseUrl);
         setAnalyses(updatedAnalyses);
 
@@ -661,6 +663,7 @@ export default function AnalysisPage() {
                   }}
                 >
                   <video
+                    muted
                     src={selectedVideo.videoUrl}
                     className="h-full w-full rounded-lg object-contain"
                     playsInline

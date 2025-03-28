@@ -86,7 +86,7 @@ const VideoRecorderNewDemo = () => {
               {recordedVideo && (
                 <div className="mt-4 p-4 border rounded-lg">
                   <h3 className="font-medium mb-2">Last Recorded Video</h3>
-                  <video src={recordedVideo.url} controls />
+                  <video src={recordedVideo.url} controls muted />
                   <div className="mt-4">
                     <Button
                       variant="outline"
@@ -193,7 +193,7 @@ const VideoRecorderDemo = () => {
                         className="w-full h-auto rounded-md"
                         playsInline
                         autoPlay={true}
-                        muted={false}
+                        muted
                         key={recordedVideo.url} // Add key to force re-render when URL changes
                       />
                     </div>

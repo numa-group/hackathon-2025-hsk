@@ -182,6 +182,7 @@ export function ObservationModal({
                 <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto sm:h-[500px] lg:h-[600px] xl:h-[700px]">
                   <div className="relative w-full h-full">
                     <video
+                      muted
                       ref={videoRef}
                       src={videoUrl}
                       className="w-full h-full object-contain"
@@ -201,6 +202,7 @@ export function ObservationModal({
                   <div className="bg-black rounded-lg overflow-hidden relative aspect-video sm:aspect-auto h-[70vh] sm:h-[500px] lg:h-[600px] xl:h-[700px]">
                     <div className="relative w-full h-full">
                       <video
+                        muted
                         ref={videoRef}
                         src={videoUrl}
                         className="w-full h-full object-contain"
