@@ -35,6 +35,9 @@ export default function AnalysisPage() {
   const [selectedVideoId, setSelectedVideoId] = useState<string>("");
   const [isUploading, setIsUploading] = useState(false);
   const [uploadMessage, setUploadMessage] = useState("");
+  const [uploadQueue, setUploadQueue] = useState<File[]>([]);
+  const [currentUploadIndex, setCurrentUploadIndex] = useState(0);
+  const [totalUploads, setTotalUploads] = useState(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [selectedObservation, setSelectedObservation] =
     useState<AnalysisObservation | null>(null);
@@ -66,60 +69,103 @@ export default function AnalysisPage() {
   const handleFileChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files || e.target.files.length === 0) return;
 
-    const file = e.target.files[0];
-
-    // Check if file is a video
-    if (!file.type.startsWith("video/")) {
-      setUploadMessage("Please upload a video file");
+    // Convert FileList to array
+    const files = Array.from(e.target.files);
+    
+    // Filter out non-video files
+    const videoFiles = files.filter(file => file.type.startsWith("video/"));
+    
+    if (videoFiles.length === 0) {
+      setUploadMessage("Please upload video files only");
       return;
     }
-
-    // Check file size (limit to 100MB)
-    if (file.size > 1024 * 1024 * 1024) {
-      setUploadMessage("File size exceeds 100MB limit");
-      return;
+    
+    // Check file sizes (limit to 100MB each)
+    const oversizedFiles = videoFiles.filter(file => file.size > 1024 * 1024 * 100);
+    if (oversizedFiles.length > 0) {
+      setUploadMessage(`${oversizedFiles.length} file(s) exceed 100MB limit and will be skipped`);
+      // Remove oversized files
+      const validFiles = videoFiles.filter(file => file.size <= 1024 * 1024 * 100);
+      if (validFiles.length === 0) return;
+      
+      // Process valid files
+      setUploadQueue(validFiles);
+      setTotalUploads(validFiles.length);
+      setCurrentUploadIndex(0);
+      
+      // Start processing the queue
+      try {
+        await processNextInQueue(validFiles, 0);
+      } catch (error) {
+        console.error("Error processing upload queue:", error);
+      }
+    } else {
+      // All files are valid
+      setUploadQueue(videoFiles);
+      setTotalUploads(videoFiles.length);
+      setCurrentUploadIndex(0);
+      
+      // Start processing the queue
+      try {
+        await processNextInQueue(videoFiles, 0);
+      } catch (error) {
+        console.error("Error processing upload queue:", error);
+      }
     }
-
-    await handleUpload(file);
   };
 
-  const handleUpload = async (file: File) => {
-    setIsUploading(true);
-    setUploadMessage("Uploading and analyzing video...");
+  const processNextInQueue = async (queue: File[], index: number) => {
+    if (index >= queue.length) {
+      // All uploads complete
+      setIsUploading(false);
+      setUploadMessage("All videos uploaded and analyzed successfully!");
+      setUploadQueue([]);
+      
+      // Reset the form
+      if (formRef.current) {
+        formRef.current.reset();
+      }
+      return;
+    }
 
     try {
-      const formData = new FormData();
-      formData.append("video", file);
-
-      const result = await processVideoAnalysis(formData);
-
-      if (result.success) {
-        // Refresh the analyses list
-        const updatedAnalyses = await loadAllAnalyses();
-        setAnalyses(updatedAnalyses);
-
-        // Select the newly uploaded video if available
-        if (result.analysis) {
-          setSelectedVideoId(result.analysis.id);
-        }
-
-        setUploadMessage("Video uploaded and analyzed successfully!");
-
-        // Reset the form
-        if (formRef.current) {
-          formRef.current.reset();
-        }
-      } else {
-        setUploadMessage(`Error: ${result.message}`);
-      }
+      await handleUpload(queue[index], index, queue.length);
+      
+      // Process next file only after current one is complete
+      setCurrentUploadIndex(index + 1);
+      await processNextInQueue(queue, index + 1);
     } catch (error) {
-      console.error("Upload error:", error);
-      setUploadMessage(
-        `Upload failed: ${error instanceof Error ? error.message : String(error)}`,
-      );
-    } finally {
-      setIsUploading(false);
+      console.error(`Error processing file at index ${index}:`, error);
+      // Continue with next file even if this one failed
+      setCurrentUploadIndex(index + 1);
+      await processNextInQueue(queue, index + 1);
     }
+  };
+
+  const handleUpload = async (file: File, index: number, total: number) => {
+    setIsUploading(true);
+    setUploadMessage(`Uploading and analyzing video ${index + 1} of ${total}: ${file.name}...`);
+
+    const formData = new FormData();
+    formData.append("video", file);
+
+    const result = await processVideoAnalysis(formData);
+
+    if (result.success) {
+      // Refresh the analyses list
+      const updatedAnalyses = await loadAllAnalyses();
+      setAnalyses(updatedAnalyses);
+
+      // Select the newly uploaded video if available
+      if (result.analysis) {
+        setSelectedVideoId(result.analysis.id);
+      }
+    } else {
+      console.error(`Error processing ${file.name}: ${result.message}`);
+      throw new Error(result.message);
+    }
+    
+    return result;
   };
 
   const getObservationClassName = (type: AnalysisObservation["sentiment"]) => {
@@ -179,6 +225,7 @@ export default function AnalysisPage() {
                 ref={fileInputRef}
                 type="file"
                 accept="video/*"
+                multiple
                 onChange={handleFileChange}
                 className="hidden"
                 id="video-upload"
@@ -189,7 +236,9 @@ export default function AnalysisPage() {
                 onClick={() => fileInputRef.current?.click()}
                 disabled={isUploading}
               >
-                {isUploading ? "Uploading..." : "Upload Video"}
+                {isUploading 
+                  ? `Uploading ${currentUploadIndex}/${totalUploads}...` 
+                  : "Upload Videos"}
               </Button>
             </form>
 
@@ -216,12 +265,34 @@ export default function AnalysisPage() {
             className={cn(
               "p-3 rounded-lg text-sm",
               uploadMessage.includes("Error") ||
-                uploadMessage.includes("failed")
+                uploadMessage.includes("failed") ||
+                uploadMessage.includes("exceed")
                 ? "bg-destructive/10 text-destructive"
                 : "bg-primary/10 text-primary",
             )}
           >
             {uploadMessage}
+          </motion.div>
+        )}
+        
+        {isUploading && uploadQueue.length > 0 && (
+          <motion.div
+            initial={{ opacity: 0, y: -10 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="bg-card border rounded-lg p-3 shadow-sm"
+          >
+            <div className="flex flex-col gap-2">
+              <p className="text-sm font-medium">Upload Progress</p>
+              <div className="w-full bg-muted rounded-full h-2.5">
+                <div 
+                  className="bg-primary h-2.5 rounded-full" 
+                  style={{ width: `${(currentUploadIndex / totalUploads) * 100}%` }}
+                ></div>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                Processing {currentUploadIndex} of {totalUploads} videos
+              </p>
+            </div>
           </motion.div>
         )}
 

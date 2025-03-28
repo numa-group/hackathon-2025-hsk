@@ -38,19 +38,21 @@ interface AIResponse {
 
 export async function processVideoAnalysis(
   formData: FormData,
-): Promise<{ success: boolean; message: string; analysis?: VideoAnalysis }> {
+): Promise<{ success: boolean; message: string; analysis?: VideoAnalysis; filename?: string }> {
   try {
     // Get the uploaded file
     const file = formData.get("video") as File;
     if (!file) {
       return { success: false, message: "No video file provided" };
     }
+    
+    // Store the original filename for error reporting
+    const originalFilename = file.name;
 
     // Create a unique ID for the analysis
     const analysisId = uuidv4();
 
-    // Get the original filename and extension
-    const originalFilename = file.name;
+    // Get the filename and extension
     const fileExtension = path.extname(originalFilename);
     const filenameWithoutExt = path.basename(originalFilename, fileExtension);
 
@@ -73,6 +75,7 @@ export async function processVideoAnalysis(
       return {
         success: false,
         message: `A file with the name ${mp4Filename} already exists. Please rename your file.`,
+        filename: originalFilename,
       };
     }
 
@@ -141,12 +144,14 @@ export async function processVideoAnalysis(
       success: true,
       message: "Video uploaded and analyzed successfully",
       analysis,
+      filename: originalFilename,
     };
   } catch (error) {
     console.error("Error processing video:", error);
     return {
       success: false,
       message: `Error processing video: ${error instanceof Error ? error.message : String(error)}`,
+      filename: file?.name,
     };
   }
 }
