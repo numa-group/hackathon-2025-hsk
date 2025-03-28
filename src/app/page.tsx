@@ -49,24 +49,28 @@ export default function Home() {
                 Video Analysis
               </Button>
             </Link>
-            
+
             <div className="flex gap-4 w-full">
               <Link href="/analysis/live" className="flex-1">
                 <Button size="lg" variant="secondary" className="w-full">
                   Live Analysis
                 </Button>
               </Link>
-              
-              <Link href="/components" className="flex-1">
-                <Button size="lg" variant="outline" className="w-full text-muted-foreground">
-                  Components
+
+              <Link href="/verify" className="flex-1">
+                <Button size="lg" variant="secondary" className="w-full">
+                  Verification
                 </Button>
               </Link>
             </div>
-            
-            <Link href="/verify" className="w-full">
-              <Button size="lg" variant="ghost" className="w-full">
-                Verification
+
+            <Link href="/components" className="w-full">
+              <Button
+                size="lg"
+                variant="outline"
+                className="w-full text-muted-foreground"
+              >
+                Components
               </Button>
             </Link>
           </div>
