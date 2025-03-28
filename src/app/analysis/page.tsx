@@ -637,7 +637,7 @@ export default function AnalysisPage() {
               </CardHeader>
               <CardContent>
                 <div
-                  className="aspect-video bg-muted rounded-lg flex items-center justify-center cursor-pointer relative overflow-hidden"
+                  className="bg-muted rounded-lg flex items-center justify-center cursor-pointer relative overflow-hidden h-[500px] lg:h-[700px] aspect-[9/16] mx-auto"
                   onClick={() => {
                     setSelectedObservation(null);
                     setIsModalOpen(true);
@@ -645,7 +645,8 @@ export default function AnalysisPage() {
                 >
                   <video
                     src={selectedVideo.videoUrl}
-                    className="w-full h-full rounded-lg object-contain"
+                    className="h-full w-full rounded-lg object-contain"
+                    playsInline
                   >
                     Your browser does not support the video tag.
                   </video>
