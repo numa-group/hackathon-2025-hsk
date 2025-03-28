@@ -25,6 +25,7 @@ export interface VideoAnalysis {
   videoUrl: string;
   aiObservations: AnalysisObservation[];
   summary: string;
+  duration?: string;
 }
 
 interface AIResponse {
@@ -36,17 +37,15 @@ interface AIResponse {
   }[];
 }
 
-export async function processVideoAnalysis(
-  formData: FormData,
-): Promise<{
+export async function processVideoAnalysis(formData: FormData): Promise<{
   success: boolean;
   message: string;
   analysis?: VideoAnalysis;
   filename?: string;
 }> {
+  // Get the uploaded file
+  const file = formData.get("video") as File;
   try {
-    // Get the uploaded file
-    const file = formData.get("video") as File;
     if (!file) {
       return { success: false, message: "No video file provided" };
     }
@@ -212,8 +211,7 @@ Analyze property videos to identify both positive aspects and issues needing att
 1. Watch the entire video carefully.
 2. Note specific observations about the property's condition.
 3. Classify each observation as "positive" or "negative."
-4. Be specific about locations (e.g., "master bathroom," "living room").
-5. IMPORTANT: For each observation, include a precise timestamp in the format "M:SS" (e.g., "0:45", "2:12").
+4. IMPORTANT: For each observation, include a precise timestamp in the format "M:SS" (e.g., "0:45", "2:12").
 
 ## Areas to Focus On
 

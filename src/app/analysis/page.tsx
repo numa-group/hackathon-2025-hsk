@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { ObservationModal } from "../components/observation-modal";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
@@ -48,7 +48,53 @@ export default function AnalysisPage() {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
+  // Calculate video statistics for the dropdown and sort by negative count (highest first)
+  const videoStats = useMemo(() => {
+    return analyses.map(video => {
+      const positiveCount = video.aiObservations.filter(obs => obs.sentiment === "positive").length;
+      const negativeCount = video.aiObservations.filter(obs => obs.sentiment === "negative").length;
+      const manualCount = video.manualObservations.length;
+      
+      return {
+        id: video.id,
+        title: video.title,
+        positiveCount,
+        negativeCount,
+        manualCount,
+        totalObservations: video.aiObservations.length,
+        duration: video.duration || '00:00'
+      };
+    }).sort((a, b) => b.negativeCount - a.negativeCount);
+  }, [analyses]);
+  
   const selectedVideo = analyses.find((video) => video.id === selectedVideoId);
+
+  // Function to get video duration
+  const getVideoDuration = (videoUrl: string): Promise<number> => {
+    return new Promise((resolve) => {
+      const video = document.createElement('video');
+      video.preload = 'metadata';
+      
+      video.onloadedmetadata = function() {
+        window.URL.revokeObjectURL(video.src);
+        resolve(video.duration);
+      };
+      
+      video.onerror = function() {
+        resolve(0); // Return 0 if there's an error
+      };
+      
+      video.src = videoUrl;
+    });
+  };
+
+  // Format seconds to MM:SS
+  const formatDuration = (seconds: number): string => {
+    if (!seconds || isNaN(seconds)) return '00:00';
+    const minutes = Math.floor(seconds / 60);
+    const remainingSeconds = Math.floor(seconds % 60);
+    return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
+  };
 
   // Load all analyses on component mount
   useEffect(() => {
@@ -59,6 +105,19 @@ export default function AnalysisPage() {
       // Select the first video if available and none is selected
       if (allAnalyses.length > 0 && !selectedVideoId) {
         setSelectedVideoId(allAnalyses[0].id);
+      }
+      
+      // Get durations for all videos
+      for (const analysis of allAnalyses) {
+        getVideoDuration(analysis.videoUrl).then(duration => {
+          setAnalyses(prev => 
+            prev.map(item => 
+              item.id === analysis.id 
+                ? { ...item, duration: formatDuration(duration) } 
+                : item
+            )
+          );
+        });
       }
     }
 
@@ -290,7 +349,7 @@ export default function AnalysisPage() {
     return cn(
       "mb-2 p-3 rounded-lg",
       type === "positive" && "bg-primary/10 border-l-4 border-primary",
-      type === "negative" && "bg-destructive/10 border-l-4 border-destructive",
+      type === "negative" && "bg-destructive/15 border-l-4 border-destructive font-medium",
     );
   };
 
@@ -359,13 +418,60 @@ export default function AnalysisPage() {
             </form>
 
             <Select value={selectedVideoId} onValueChange={handleVideoChange}>
-              <SelectTrigger className="w-full sm:w-[280px]">
-                <SelectValue placeholder="Select a video" />
+              <SelectTrigger className="w-full sm:w-[250px] px-3 py-2">
+                {selectedVideoId ? (
+                  <div className="flex items-center">
+                    <span className="truncate">
+                      {videoStats.find(v => v.id === selectedVideoId)?.title || "Select a video"}
+                    </span>
+                    <div className="flex items-center gap-1 ml-2">
+                      {videoStats.find(v => v.id === selectedVideoId)?.positiveCount > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">
+                          +{videoStats.find(v => v.id === selectedVideoId)?.positiveCount}
+                        </span>
+                      )}
+                      {videoStats.find(v => v.id === selectedVideoId)?.negativeCount > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-destructive/20 px-2 py-0.5 text-xs font-medium text-destructive">
+                          -{videoStats.find(v => v.id === selectedVideoId)?.negativeCount}
+                        </span>
+                      )}
+                      {videoStats.find(v => v.id === selectedVideoId)?.manualCount > 0 && (
+                        <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-400">
+                          M:{videoStats.find(v => v.id === selectedVideoId)?.manualCount}
+                        </span>
+                      )}
+                    </div>
+                  </div>
+                ) : (
+                  <SelectValue placeholder="Select a video" />
+                )}
               </SelectTrigger>
-              <SelectContent>
-                {analyses.map((video) => (
-                  <SelectItem key={video.id} value={video.id}>
-                    {video.title}
+              <SelectContent className="max-w-[350px]">
+                {videoStats.map((video) => (
+                  <SelectItem key={video.id} value={video.id} className="py-3">
+                    <div className="flex items-center justify-between w-full">
+                      <div className="flex items-center">
+                        <span className="font-medium">{video.title}</span>
+                        <div className="flex items-center gap-1 ml-2">
+                          {video.positiveCount > 0 && (
+                            <span className="inline-flex items-center rounded-full bg-green-100 dark:bg-green-900/30 px-2 py-0.5 text-xs font-medium text-green-800 dark:text-green-400">
+                              +{video.positiveCount}
+                            </span>
+                          )}
+                          {video.negativeCount > 0 && (
+                            <span className="inline-flex items-center rounded-full bg-destructive/20 px-2 py-0.5 text-xs font-medium text-destructive">
+                              -{video.negativeCount}
+                            </span>
+                          )}
+                          {video.manualCount > 0 && (
+                            <span className="inline-flex items-center rounded-full bg-amber-100 dark:bg-amber-900/30 px-2 py-0.5 text-xs font-medium text-amber-800 dark:text-amber-400">
+                              M:{video.manualCount}
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <span className="text-xs text-muted-foreground ml-2">{video.duration}</span>
+                    </div>
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -379,10 +485,10 @@ export default function AnalysisPage() {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
             className={cn(
-              "p-3 rounded-lg text-sm",
-              messageStatus === "error" && "bg-destructive/10 text-destructive",
-              messageStatus === "success" && "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400",
-              messageStatus === "info" && "bg-primary/10 text-primary"
+              "p-4 rounded-lg text-sm font-medium border",
+              messageStatus === "error" && "bg-destructive/15 text-destructive border-destructive/30",
+              messageStatus === "success" && "bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400 border-green-200 dark:border-green-800/30",
+              messageStatus === "info" && "bg-primary/10 text-primary border-primary/20"
             )}
           >
             {uploadMessage}
@@ -414,23 +520,26 @@ export default function AnalysisPage() {
                 <p className="text-xs font-medium">File Status:</p>
                 <div className="max-h-[200px] overflow-y-auto pr-2">
                   {Object.entries(fileStatuses).map(([filename, status]) => (
-                    <div key={filename} className="flex items-center justify-between py-1 border-b border-muted last:border-0">
+                    <div key={filename} className={cn(
+                      "flex items-center justify-between py-2 px-2 border-b border-muted last:border-0 rounded",
+                      status.status === 'error' && "bg-destructive/10"
+                    )}>
                       <div className="flex items-center gap-2 truncate max-w-[70%]">
                         <span className={cn(
-                          "size-2 rounded-full",
+                          "size-3 rounded-full",
                           status.status === 'pending' && "bg-muted",
                           status.status === 'processing' && "bg-blue-500",
                           status.status === 'success' && "bg-green-500",
-                          status.status === 'error' && "bg-red-500"
+                          status.status === 'error' && "bg-destructive animate-pulse"
                         )}></span>
                         <span className="text-xs truncate" title={filename}>{filename}</span>
                       </div>
                       <span className={cn(
-                        "text-xs",
+                        "text-xs font-medium px-2 py-1 rounded",
                         status.status === 'pending' && "text-muted-foreground",
-                        status.status === 'processing' && "text-blue-500",
-                        status.status === 'success' && "text-green-500",
-                        status.status === 'error' && "text-red-500"
+                        status.status === 'processing' && "text-blue-500 bg-blue-50 dark:bg-blue-950/30",
+                        status.status === 'success' && "text-green-600 bg-green-50 dark:bg-green-950/30",
+                        status.status === 'error' && "text-white bg-destructive"
                       )}>
                         {status.status === 'pending' && 'Waiting...'}
                         {status.status === 'processing' && 'Processing...'}
@@ -580,8 +689,9 @@ export default function AnalysisPage() {
                               initial={{ opacity: 0, x: 10 }}
                               animate={{ opacity: 1, x: 0 }}
                               transition={{ duration: 0.3 }}
-                              className={getObservationClassName(
-                                observation.sentiment,
+                              className={cn(
+                                getObservationClassName(observation.sentiment),
+                                observation.sentiment === "negative" && "shadow-sm"
                               )}
                             >
                               <div className="flex justify-between items-start">
