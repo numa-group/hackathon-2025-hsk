@@ -39,7 +39,7 @@ interface AIResponse {
 
 export async function processVideoAnalysis(
   formData: FormData,
-  skipFileOperations: boolean = true
+  skipFileOperations: boolean = true,
 ): Promise<{
   success: boolean;
   message: string;
@@ -67,7 +67,7 @@ export async function processVideoAnalysis(
     // Always use .mp4 extension for the output file
     const mp4Filename = `${filenameWithoutExt}.mp4`;
     let aiResponse;
-    
+
     if (!skipFileOperations) {
       // Ensure the videos directory exists
       const publicDir = path.join(process.cwd(), "public");
@@ -78,7 +78,7 @@ export async function processVideoAnalysis(
       }
 
       const videoPath = path.join(videosDir, mp4Filename);
-      
+
       // Check if files already exist
       if (fs.existsSync(videoPath)) {
         console.log(`File ${mp4Filename} already exists, skipping this file.`);
@@ -430,49 +430,64 @@ function compressVideo(inputPath: string, outputPath: string): Promise<void> {
 }
 
 // Function to load all available analyses
-export async function loadAllAnalyses(baseUrl?: string): Promise<
-  (VideoAnalysis & { manualObservations: AnalysisObservation[] })[]
-> {
+export async function loadAllAnalyses(
+  baseUrl: string,
+): Promise<(VideoAnalysis & { manualObservations: AnalysisObservation[] })[]> {
   try {
-    // Use the provided baseUrl or default to empty string
-    const apiUrl = baseUrl ? `${baseUrl}/api/videos` : '/api/videos';
-    
-    // Fetch the list of JSON files from the videos directory
-    const response = await fetch(apiUrl);
-    
-    if (!response.ok) {
-      throw new Error(`Failed to fetch video list: ${response.statusText}`);
-    }
-    
-    const videoFiles = await response.json();
-    
     // Fetch and parse each JSON file
-    const analysesPromises = videoFiles.jsonFiles.map(async (filename: string) => {
-      const jsonUrl = baseUrl ? `${baseUrl}/videos/${filename}` : `/videos/${filename}`;
+    const analysesPromises = [
+      "IMG 3847",
+      "IMG 3848",
+      "IMG_3847",
+      "IMG_3848",
+      "IMG_3849",
+      "IMG_3850",
+      "IMG_3852",
+      "IMG_3853",
+      "IMG_3854",
+      "IMG_3856",
+      "IMG_3858",
+      "IMG_3859",
+      "IMG_3865",
+      "IMG_3868",
+      "IMG_3870",
+      "IMG_3875",
+      "IMG_3876",
+      "IMG_3877",
+      "IMG_3880",
+      "IMG_3882",
+      "IMG_3885",
+      "IMG_3886",
+    ].map(async (filename: string) => {
+      const jsonUrl = `${baseUrl}/videos/${filename}.json`;
       const jsonResponse = await fetch(jsonUrl);
-      
+
       if (!jsonResponse.ok) {
-        console.error(`Failed to fetch ${filename}: ${jsonResponse.statusText}`);
+        console.error(
+          `Failed to fetch ${filename}: ${jsonResponse.statusText}`,
+        );
         return null;
       }
-      
-      const analysis = await jsonResponse.json() as VideoAnalysis;
-      
+
+      const analysis = (await jsonResponse.json()) as VideoAnalysis;
+
       // Match with manual observations
       const matchingObservations =
         manualObservations[analysis.title.replaceAll("_", " ")] || [];
-      
+
       return {
         ...analysis,
         manualObservations: matchingObservations,
       };
     });
-    
+
     // Filter out any null results from failed fetches
-    const analyses = (await Promise.all(analysesPromises)).filter(Boolean) as (VideoAnalysis & { 
-      manualObservations: AnalysisObservation[] 
+    const analyses = (await Promise.all(analysesPromises)).filter(
+      Boolean,
+    ) as (VideoAnalysis & {
+      manualObservations: AnalysisObservation[];
     })[];
-    
+
     return analyses;
   } catch (error) {
     console.error("Error loading analyses:", error);
