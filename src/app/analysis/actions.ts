@@ -430,41 +430,49 @@ function compressVideo(inputPath: string, outputPath: string): Promise<void> {
 }
 
 // Function to load all available analyses
-export async function loadAllAnalyses(): Promise<
+export async function loadAllAnalyses(baseUrl?: string): Promise<
   (VideoAnalysis & { manualObservations: AnalysisObservation[] })[]
 > {
   try {
-    const videosDir = path.join(process.cwd(), "public", "videos");
-
-    // Create directory if it doesn't exist
-    if (!fs.existsSync(videosDir)) {
-      await mkdir(videosDir, { recursive: true });
-      return [];
+    // Use the provided baseUrl or default to empty string
+    const apiUrl = baseUrl ? `${baseUrl}/api/videos` : '/api/videos';
+    
+    // Fetch the list of JSON files from the videos directory
+    const response = await fetch(apiUrl);
+    
+    if (!response.ok) {
+      throw new Error(`Failed to fetch video list: ${response.statusText}`);
     }
-
-    // Read all files in the directory
-    const files = fs.readdirSync(videosDir);
-
-    // Filter for JSON files
-    const jsonFiles = files.filter((file) => file.endsWith(".json"));
-
-    // Read and parse each JSON file
-    const analyses = jsonFiles.map((file) => {
-      const filePath = path.join(videosDir, file);
-      const fileContent = fs.readFileSync(filePath, "utf8");
-      const analysis = JSON.parse(fileContent) as VideoAnalysis;
-
-      // Import is done at the top level, so we can use manualObservations directly
-      console.log("TITLE: ", analysis.title);
+    
+    const videoFiles = await response.json();
+    
+    // Fetch and parse each JSON file
+    const analysesPromises = videoFiles.jsonFiles.map(async (filename: string) => {
+      const jsonUrl = baseUrl ? `${baseUrl}/videos/${filename}` : `/videos/${filename}`;
+      const jsonResponse = await fetch(jsonUrl);
+      
+      if (!jsonResponse.ok) {
+        console.error(`Failed to fetch ${filename}: ${jsonResponse.statusText}`);
+        return null;
+      }
+      
+      const analysis = await jsonResponse.json() as VideoAnalysis;
+      
+      // Match with manual observations
       const matchingObservations =
         manualObservations[analysis.title.replaceAll("_", " ")] || [];
-
+      
       return {
         ...analysis,
         manualObservations: matchingObservations,
       };
     });
-
+    
+    // Filter out any null results from failed fetches
+    const analyses = (await Promise.all(analysesPromises)).filter(Boolean) as (VideoAnalysis & { 
+      manualObservations: AnalysisObservation[] 
+    })[];
+    
     return analyses;
   } catch (error) {
     console.error("Error loading analyses:", error);

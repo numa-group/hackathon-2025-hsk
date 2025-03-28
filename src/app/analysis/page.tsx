@@ -116,25 +116,41 @@ export default function AnalysisPage() {
   // Load all analyses on component mount
   useEffect(() => {
     async function fetchAnalyses() {
-      const allAnalyses = await loadAllAnalyses();
-      setAnalyses(allAnalyses);
+      try {
+        // Get the base URL for the current environment
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const allAnalyses = await loadAllAnalyses(baseUrl);
+        
+        if (allAnalyses.length === 0) {
+          console.log("No analyses found");
+          return;
+        }
+        
+        setAnalyses(allAnalyses);
 
-      // Select the first video if available and none is selected
-      if (allAnalyses.length > 0 && !selectedVideoId) {
-        setSelectedVideoId(allAnalyses[0].id);
-      }
+        // Select the first video if available and none is selected
+        if (allAnalyses.length > 0 && !selectedVideoId) {
+          setSelectedVideoId(allAnalyses[0].id);
+        }
 
-      // Get durations for all videos
-      for (const analysis of allAnalyses) {
-        getVideoDuration(analysis.videoUrl).then((duration) => {
-          setAnalyses((prev) =>
-            prev.map((item) =>
-              item.id === analysis.id
-                ? { ...item, duration: formatDuration(duration) }
-                : item,
-            ),
-          );
-        });
+        // Get durations for all videos
+        for (const analysis of allAnalyses) {
+          // Use the videoUrl directly - it should be a relative path that works in any environment
+          getVideoDuration(analysis.videoUrl).then((duration) => {
+            setAnalyses((prev) =>
+              prev.map((item) =>
+                item.id === analysis.id
+                  ? { ...item, duration: formatDuration(duration) }
+                  : item,
+              ),
+            );
+          });
+        }
+      } catch (error) {
+        console.error("Failed to load analyses:", error);
+        setUploadMessage("Failed to load video analyses. Please try again.");
+        setMessageStatus("error");
+        setShowMessage(true);
       }
     }
 
@@ -340,7 +356,8 @@ export default function AnalysisPage() {
 
         // Only refresh the analyses list after successful upload
         // This is done without causing a full page reload
-        const updatedAnalyses = await loadAllAnalyses();
+        const baseUrl = typeof window !== 'undefined' ? window.location.origin : '';
+        const updatedAnalyses = await loadAllAnalyses(baseUrl);
         setAnalyses(updatedAnalyses);
 
         // Select the newly uploaded video if available
