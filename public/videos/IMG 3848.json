@@ -1,0 +1,29 @@
+{
+  "id": "2a5d03d5-fe71-4c0b-bb4d-7c9e0b2aa88c",
+  "title": "IMG 3848",
+  "videoUrl": "/videos/IMG 3848.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet bowl and seat appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Toilet flushes properly.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "No visible damage to the toilet bowl or fixtures.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    }
+  ],
+  "summary": "Analysis found 3 observations: 3 positive and 0 negative. \n  There were 1 cleanliness observations and 2 maintenance observations."
+}

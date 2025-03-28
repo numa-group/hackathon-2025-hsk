@@ -1,0 +1,36 @@
+{
+  "id": "990e29cd-3816-42e8-a5cd-dfff6268a489",
+  "title": "IMG_3875",
+  "videoUrl": "/videos/IMG_3875.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The trash can is clean and appears to be in good condition.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The floor looks clean and well-maintained.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The wall looks clean with no visible marks.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The baseboard is clean and in good condition.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 4 observations: 4 positive and 0 negative. \n  There were 4 cleanliness observations and 0 maintenance observations."
+}

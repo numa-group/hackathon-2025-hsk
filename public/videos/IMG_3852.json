@@ -1,0 +1,29 @@
+{
+  "id": "b932ef02-dd13-41b3-bad1-1572aee4048e",
+  "title": "IMG_3852",
+  "videoUrl": "/videos/IMG_3852.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet bowl is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:03"
+    },
+    {
+      "id": "ai-1",
+      "description": "Some debris/dust on the floor in the corner.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:06"
+    },
+    {
+      "id": "ai-2",
+      "description": "Toilet appears to not be properly secured to the wall.",
+      "type": "maintenance",
+      "sentiment": "negative",
+      "timestamp": "0:07"
+    }
+  ],
+  "summary": "Analysis found 3 observations: 1 positive and 2 negative. \n  There were 2 cleanliness observations and 1 maintenance observations."
+}

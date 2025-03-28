@@ -1,0 +1,15 @@
+{
+  "id": "815d7175-efc6-47b1-b5c4-20744503d0de",
+  "title": "live-recording-1743160644348",
+  "videoUrl": "/videos/live-recording-1743160644348.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The person in the video is showing how to clean the phone screen.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:04"
+    }
+  ],
+  "summary": "Analysis found 1 observations: 1 positive and 0 negative. \n  There were 1 cleanliness observations and 0 maintenance observations."
+}

@@ -1,0 +1,29 @@
+{
+  "id": "8f95ee74-2ea2-408f-b043-31ef1e558e91",
+  "title": "IMG_3885",
+  "videoUrl": "/videos/IMG_3885.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Clean ceiling in the room.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Ceiling light fixture appears clean and in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "Recessed ceiling light is clean and functioning.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    }
+  ],
+  "summary": "Analysis found 3 observations: 3 positive and 0 negative. \n  There were 1 cleanliness observations and 2 maintenance observations."
+}

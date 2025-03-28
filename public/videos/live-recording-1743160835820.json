@@ -1,0 +1,64 @@
+{
+  "id": "bdffcf7b-b828-42cb-abc3-875b7b6ae826",
+  "title": "live-recording-1743160835820",
+  "videoUrl": "/videos/live-recording-1743160835820.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The floors appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The walls and ceiling look well-maintained.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The lighting is adequate.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The individual's attire is casual.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "The closet door is closed and appears to be in good working order.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-5",
+      "description": "The curtains are neatly drawn.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-6",
+      "description": "The phone screen is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:10"
+    },
+    {
+      "id": "ai-7",
+      "description": "The picture displayed on the phone screen is clear.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:14"
+    }
+  ],
+  "summary": "Analysis found 8 observations: 8 positive and 0 negative. \n  There were 5 cleanliness observations and 3 maintenance observations."
+}

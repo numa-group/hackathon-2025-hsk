@@ -1,0 +1,22 @@
+{
+  "id": "b9d3644e-af8e-4516-8eed-81c0e2a868d3",
+  "title": "IMG_3882",
+  "videoUrl": "/videos/IMG_3882.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "White tile floor appears clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-1",
+      "description": "Some dust or debris is present near the carpet edge.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:05"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 1 positive and 1 negative. \n  There were 2 cleanliness observations and 0 maintenance observations."
+}

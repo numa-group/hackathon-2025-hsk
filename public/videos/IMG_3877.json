@@ -1,0 +1,36 @@
+{
+  "id": "38778cff-e1b3-44d9-8a24-607576ca5e43",
+  "title": "IMG_3877",
+  "videoUrl": "/videos/IMG_3877.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The bed sheets appear clean and crisp.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The floor looks clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "The side table next to the bed is clean and tidy",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:07"
+    },
+    {
+      "id": "ai-3",
+      "description": "The artwork above the bed adds to the aesthetics of the room.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:11"
+    }
+  ],
+  "summary": "Analysis found 4 observations: 4 positive and 0 negative. \n  There were 3 cleanliness observations and 1 maintenance observations."
+}

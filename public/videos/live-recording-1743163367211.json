@@ -1,0 +1,57 @@
+{
+  "id": "ec4ab2ba-3e7c-42b2-b798-d88052567577",
+  "title": "live-recording-1743163367211",
+  "videoUrl": "/videos/live-recording-1743163367211.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The floor looks clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The walls appear to be in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The lighting in the room seems adequate.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The closet doors appear to be in good working order.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "The individual's attire is casual.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-5",
+      "description": "The glasses appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-6",
+      "description": "The phone's screen is clean and undamaged",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 7 observations: 7 positive and 0 negative. \n  There were 4 cleanliness observations and 3 maintenance observations."
+}

@@ -1,0 +1,36 @@
+{
+  "id": "1673a4eb-d1a1-4ffe-8522-c98acc53b5ae",
+  "title": "IMG_3886",
+  "videoUrl": "/videos/IMG_3886.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The Nespresso machine appears dusty.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-1",
+      "description": "Dirty cups suggest prior guests were not cleaned up after.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "The kettle looks clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:04"
+    },
+    {
+      "id": "ai-3",
+      "description": "The countertop seems generally clean, apart from the used cups.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:06"
+    }
+  ],
+  "summary": "Analysis found 4 observations: 2 positive and 2 negative. \n  There were 4 cleanliness observations and 0 maintenance observations."
+}

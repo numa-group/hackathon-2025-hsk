@@ -1,0 +1,15 @@
+{
+  "id": "454295e2-eedb-4666-940f-cf5c1020ee11",
+  "title": "IMG 3847",
+  "videoUrl": "/videos/IMG 3847.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet bowl and seat appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 1 observations: 1 positive and 0 negative. \n  There were 1 cleanliness observations and 0 maintenance observations."
+}

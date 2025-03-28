@@ -1,0 +1,50 @@
+{
+  "id": "137e6283-473d-4c34-93cd-c88c37f28fbf",
+  "title": "IMG_3858",
+  "videoUrl": "/videos/IMG_3858.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The counter top appears clean and free of any visible debris.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    },
+    {
+      "id": "ai-1",
+      "description": "The coffee pods and tea bags are neatly organized in the container.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    },
+    {
+      "id": "ai-2",
+      "description": "The sink is clean and free of any noticeable stains or debris.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:04"
+    },
+    {
+      "id": "ai-3",
+      "description": "The coffee machine appears to be in good condition and clean.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:04"
+    },
+    {
+      "id": "ai-4",
+      "description": "The faucet and handles are clean and in good working order.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:04"
+    },
+    {
+      "id": "ai-5",
+      "description": "The electrical outlets and thermostat are clean and functional.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:06"
+    }
+  ],
+  "summary": "Analysis found 6 observations: 6 positive and 0 negative. \n  There were 3 cleanliness observations and 3 maintenance observations."
+}

@@ -1,0 +1,43 @@
+{
+  "id": "b6dc11b2-2e41-4268-a82b-e39e807a3ea1",
+  "title": "live-recording-1743160386335",
+  "videoUrl": "/videos/live-recording-1743160386335.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The person in the video seems happy.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The room appears to be dimly lit.",
+      "type": "maintenance",
+      "sentiment": "negative",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "A wooden wardrobe is visible in the background.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "A red garment is visible hanging in the background.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "Part of what appears to be exercise equipment is visible in the background.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 5 observations: 4 positive and 1 negative. \n  There were 2 cleanliness observations and 3 maintenance observations."
+}

@@ -1,0 +1,43 @@
+{
+  "id": "387a5c4e-51c8-40a0-8a5e-b3931502a0cc",
+  "title": "IMG_3859",
+  "videoUrl": "/videos/IMG_3859.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The round table is clean and has two empty glasses and a couple of small beverage cartons.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Two dark-colored chairs are placed on opposite sides of the round table.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "A simple, thin lamp is positioned on the table, likely providing task lighting.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The floor has a patterned carpet with alternating dark and light blue chevron stripes.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "A dark curtain is partially visible in the background on the left side.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 5 observations: 5 positive and 0 negative. \n  There were 2 cleanliness observations and 3 maintenance observations."
+}

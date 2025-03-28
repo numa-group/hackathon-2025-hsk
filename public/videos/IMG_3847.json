@@ -1,0 +1,15 @@
+{
+  "id": "ec2daa6b-464f-4dd0-a145-fb487fa7966b",
+  "title": "IMG_3847",
+  "videoUrl": "/videos/IMG_3847.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet appears clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 1 observations: 1 positive and 0 negative. \n  There were 1 cleanliness observations and 0 maintenance observations."
+}

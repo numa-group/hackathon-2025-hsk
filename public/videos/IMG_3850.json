@@ -1,0 +1,22 @@
+{
+  "id": "8e4d8b87-98fa-4e73-bea3-f1c1f371e90a",
+  "title": "IMG_3850",
+  "videoUrl": "/videos/IMG_3850.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The toilet bowl and seat appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The underside of the toilet seat shows small brown spots.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:14"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 1 positive and 1 negative. \n  There were 2 cleanliness observations and 0 maintenance observations."
+}

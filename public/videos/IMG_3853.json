@@ -1,0 +1,22 @@
+{
+  "id": "15510f5e-0f12-4036-a51b-92873ebe3dca",
+  "title": "IMG_3853",
+  "videoUrl": "/videos/IMG_3853.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Dust and debris are visible on the exhaust fan grill.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:02"
+    },
+    {
+      "id": "ai-1",
+      "description": "The exhaust fan cover appears to be securely attached to the ceiling.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:03"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 1 positive and 1 negative. \n  There were 1 cleanliness observations and 1 maintenance observations."
+}

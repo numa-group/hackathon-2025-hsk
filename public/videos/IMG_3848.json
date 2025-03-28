@@ -1,0 +1,22 @@
+{
+  "id": "2084d5b0-3c6f-473e-8d01-31e35e219239",
+  "title": "IMG_3848",
+  "videoUrl": "/videos/IMG_3848.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet appears to be clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Toilet flushes properly.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 2 positive and 0 negative. \n  There were 1 cleanliness observations and 1 maintenance observations."
+}

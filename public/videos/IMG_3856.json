@@ -1,0 +1,64 @@
+{
+  "id": "c2b37901-7db8-4718-a6da-42967fb062e9",
+  "title": "IMG_3856",
+  "videoUrl": "/videos/IMG_3856.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The bathroom is generally clean and well-maintained.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The mirror is clean and streak-free.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-2",
+      "description": "The sink and faucet appear clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:03"
+    },
+    {
+      "id": "ai-3",
+      "description": "Towels are neatly folded and placed on the towel rack.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "The shower door is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-5",
+      "description": "The lighting is adequate.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-6",
+      "description": "The heated towel rack appears to be functional.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-7",
+      "description": "There is a small circular mirror present.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    }
+  ],
+  "summary": "Analysis found 8 observations: 8 positive and 0 negative. \n  There were 5 cleanliness observations and 3 maintenance observations."
+}

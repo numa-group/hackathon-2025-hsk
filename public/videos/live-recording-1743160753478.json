@@ -1,0 +1,50 @@
+{
+  "id": "2b4c894a-62c4-4c86-9dd7-1e396df92c72",
+  "title": "live-recording-1743160753478",
+  "videoUrl": "/videos/live-recording-1743160753478.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The person in the video appears to be well-groomed and presentable.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The room appears to be generally clean and tidy.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The lighting in the room is good, allowing for clear visibility.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The wooden wardrobe or cupboard in the background appears to be in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "There are limited details to assess specific aspects of cleanliness and maintenance, such as the condition of floors, bathrooms, or kitchen areas.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-5",
+      "description": "The video does not provide information on important aspects of property assessment, such as the state of fixtures, fittings, appliances, plumbing, or HVAC systems.",
+      "type": "maintenance",
+      "sentiment": "negative",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 6 observations: 4 positive and 2 negative. \n  There were 3 cleanliness observations and 3 maintenance observations."
+}

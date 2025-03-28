@@ -1,0 +1,29 @@
+{
+  "id": "86fc0643-5598-4700-8dad-7c2acbf08407",
+  "title": "IMG_3849",
+  "videoUrl": "/videos/IMG_3849.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "Toilet bowl is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Toilet seat is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The floor around the toilet is unclear and may need a wipe down.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:01"
+    }
+  ],
+  "summary": "Analysis found 3 observations: 2 positive and 1 negative. \n  There were 3 cleanliness observations and 0 maintenance observations."
+}

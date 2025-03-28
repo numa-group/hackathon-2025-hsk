@@ -1,0 +1,36 @@
+{
+  "id": "3b707ef2-2ec5-4411-96c2-219d358a1cab",
+  "title": "IMG_3870",
+  "videoUrl": "/videos/IMG_3870.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The faucet and fixtures appear clean and in good condition.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The sink looks clean and well-maintained.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The countertop appears clean and undamaged.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The backsplash/wall above the counter seems clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 4 observations: 4 positive and 0 negative. \n  There were 4 cleanliness observations and 0 maintenance observations."
+}

@@ -1,0 +1,78 @@
+{
+  "id": "e44f6b72-4a1c-4607-a402-d431a9f52c22",
+  "title": "live-recording-1743163435767",
+  "videoUrl": "/videos/live-recording-1743163435767.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The person in the video has dark hair and a dark beard.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:05"
+    },
+    {
+      "id": "ai-1",
+      "description": "The person is wearing a dark gray t-shirt.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:06"
+    },
+    {
+      "id": "ai-2",
+      "description": "The person is wearing glasses.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:07"
+    },
+    {
+      "id": "ai-3",
+      "description": "The person is wearing over-the-ear headphones.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:07"
+    },
+    {
+      "id": "ai-4",
+      "description": "The walls in the room are off-white.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-5",
+      "description": "There appears to be a dark wooden wardrobe or closet in the room.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-6",
+      "description": "A wooden door can be seen in the background.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-7",
+      "description": "There is a dark office chair with a mesh back.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:05"
+    },
+    {
+      "id": "ai-8",
+      "description": "What may be a treadmill can be seen in the background on the right side of the video.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:06"
+    },
+    {
+      "id": "ai-9",
+      "description": "A dark curtain hangs on the left side of the video.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 10 observations: 10 positive and 0 negative. \n  There were 4 cleanliness observations and 6 maintenance observations."
+}

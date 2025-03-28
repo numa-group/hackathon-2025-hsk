@@ -1,0 +1,43 @@
+{
+  "id": "b5c293cf-40a3-4d45-9d1e-33eb520b6077",
+  "title": "IMG_3865",
+  "videoUrl": "/videos/IMG_3865.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The countertop and sink appear clean and well-maintained.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The faucet and controls are in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The coffee machine looks new and clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-3",
+      "description": "The provided amenities (coffee, cups, etc.) are neatly arranged.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    },
+    {
+      "id": "ai-4",
+      "description": "Electrical outlets are accessible and in good working order.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:02"
+    }
+  ],
+  "summary": "Analysis found 5 observations: 5 positive and 0 negative. \n  There were 3 cleanliness observations and 2 maintenance observations."
+}

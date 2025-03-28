@@ -1,0 +1,43 @@
+{
+  "id": "c7543279-a150-4758-8343-f12a92a227ea",
+  "title": "live-recording-1743160232176",
+  "videoUrl": "/videos/live-recording-1743160232176.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The person in the video appears to be well-groomed and presentable.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The room appears to be generally tidy.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The lighting in the room is adequate for visibility.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-3",
+      "description": "The closet door appears to be in good condition.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "A portion of exercise equipment is visible, suggesting the room may be multi-purpose.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 5 observations: 5 positive and 0 negative. \n  There were 2 cleanliness observations and 3 maintenance observations."
+}

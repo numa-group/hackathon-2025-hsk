@@ -1,0 +1,22 @@
+{
+  "id": "e13cc6f5-477f-447f-8be7-c9c31f1be51f",
+  "title": "IMG_3880",
+  "videoUrl": "/videos/IMG_3880.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The thermostat shows the temperature is set to 22°C.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The thermostat appears to be functioning correctly, displaying the time and day.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 2 positive and 0 negative. \n  There were 0 cleanliness observations and 2 maintenance observations."
+}

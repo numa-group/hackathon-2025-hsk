@@ -1,0 +1,22 @@
+{
+  "id": "eac857df-f3f6-4483-9f30-65ae1348588c",
+  "title": "IMG_3876",
+  "videoUrl": "/videos/IMG_3876.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The bed sheets appear to have wrinkles and creases.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "Potential stain or mark on the bedsheet.",
+      "type": "cleanliness",
+      "sentiment": "negative",
+      "timestamp": "0:05"
+    }
+  ],
+  "summary": "Analysis found 2 observations: 0 positive and 2 negative. \n  There were 2 cleanliness observations and 0 maintenance observations."
+}

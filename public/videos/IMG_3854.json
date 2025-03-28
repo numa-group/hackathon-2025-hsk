@@ -1,0 +1,43 @@
+{
+  "id": "5fd414b5-55e6-4171-bbc5-26171425c0d6",
+  "title": "IMG_3854",
+  "videoUrl": "/videos/IMG_3854.mp4",
+  "aiObservations": [
+    {
+      "id": "ai-0",
+      "description": "The toilet bowl is clean.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-1",
+      "description": "The toilet seat and lid appear to be clean and undamaged.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-2",
+      "description": "The toilet flushes properly.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:01"
+    },
+    {
+      "id": "ai-3",
+      "description": "The hinges on the toilet seat appear to be in good working order.",
+      "type": "maintenance",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    },
+    {
+      "id": "ai-4",
+      "description": "The toilet bowl and surrounding area look clean and free of stains.",
+      "type": "cleanliness",
+      "sentiment": "positive",
+      "timestamp": "0:00"
+    }
+  ],
+  "summary": "Analysis found 5 observations: 5 positive and 0 negative. \n  There were 3 cleanliness observations and 2 maintenance observations."
+}
