@@ -4,6 +4,7 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { cn } from "@/lib/utils";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { upload } from "@vercel/blob/client";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { VideoRecorderNew } from "@/app/components/video-recorder-new";
 import { ObservationModal } from "@/app/components/observation-modal";
@@ -44,9 +45,16 @@ export default function LiveAnalysisPage() {
         },
       );
 
+      const uploadBlob = await upload(file.name, file, {
+        access: "public",
+        handleUploadUrl: "/api/upload-video",
+      });
+      console.log("UPLOAD BLOB:", uploadBlob, uploadBlob.url, file.type);
+
       // Create FormData and append the file
       const formData = new FormData();
-      formData.append("video", file);
+      formData.append("videoUrl", uploadBlob.url);
+      formData.append("videoType", uploadBlob.contentType);
 
       // Process the video
       const result = await processVideoAnalysis(formData);
@@ -92,9 +100,6 @@ export default function LiveAnalysisPage() {
               Live Analysis
             </a>
           </h1>
-          <p className="text-xs text-muted-foreground">
-            Recordings stored locally
-          </p>
         </div>
 
         {statusMessage && (

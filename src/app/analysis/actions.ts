@@ -1,7 +1,13 @@
 "use server";
 
-import { GoogleGenerativeAI } from "@google/generative-ai";
-import { GoogleAIFileManager, FileState } from "@google/generative-ai/server";
+import {
+  createPartFromUri,
+  createUserContent,
+  FileState,
+  GoogleGenAI,
+  SchemaUnion,
+  Type,
+} from "@google/genai";
 import fs from "fs";
 import path from "path";
 import { writeFile, mkdir } from "fs/promises";
@@ -48,125 +54,142 @@ export async function processVideoAnalysis(
 }> {
   // Get the uploaded file
   const file = formData.get("video") as File;
+  const fileUrl = formData.get("videoUrl") as string;
+  const fileType = formData.get("videoType") as string;
   try {
-    if (!file) {
-      return { success: false, message: "No video file provided" };
-    }
-
-    // Store the original filename for error reporting
-    const originalFilename = file.name;
-
     // Create a unique ID for the analysis
     const analysisId = uuidv4();
-
-    // Get the filename and extension
-    const fileExtension = path.extname(originalFilename);
-    const filenameWithoutExt = path.basename(originalFilename, fileExtension);
-
-    // Define paths for the video and JSON files
-    // Always use .mp4 extension for the output file
-    const mp4Filename = `${filenameWithoutExt}.mp4`;
     let aiResponse;
 
-    if (!skipFileOperations) {
-      // Ensure the videos directory exists
-      const publicDir = path.join(process.cwd(), "public");
-      const videosDir = path.join(publicDir, "videos");
+    if (file) {
+      // Store the original filename for error reporting
+      const originalFilename = file.name;
 
-      if (!fs.existsSync(videosDir)) {
-        await mkdir(videosDir, { recursive: true });
-      }
+      // Get the filename and extension
+      const fileExtension = path.extname(originalFilename);
+      const filenameWithoutExt = path.basename(originalFilename, fileExtension);
 
-      const videoPath = path.join(videosDir, mp4Filename);
+      // Define paths for the video and JSON files
+      // Always use .mp4 extension for the output file
+      const mp4Filename = `${filenameWithoutExt}.mp4`;
 
-      // Check if files already exist
-      if (fs.existsSync(videoPath)) {
-        console.log(`File ${mp4Filename} already exists, skipping this file.`);
-        return {
-          success: false,
-          message: `A file with the name ${mp4Filename} already exists and was skipped.`,
-          filename: originalFilename,
-        };
-      }
+      if (!skipFileOperations) {
+        // Ensure the videos directory exists
+        const publicDir = path.join(process.cwd(), "public");
+        const videosDir = path.join(publicDir, "videos");
 
-      // Convert the file to a Buffer
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
+        if (!fs.existsSync(videosDir)) {
+          await mkdir(videosDir, { recursive: true });
+        }
 
-      // Create a temporary path for the original video
-      const tempOriginalPath = path.join(
-        videosDir,
-        `temp_original_${originalFilename}`,
-      );
+        const videoPath = path.join(videosDir, mp4Filename);
 
-      // Save the original video file to temp location
-      await writeFile(tempOriginalPath, buffer);
+        // Check if files already exist
+        if (fs.existsSync(videoPath)) {
+          console.log(
+            `File ${mp4Filename} already exists, skipping this file.`,
+          );
+          return {
+            success: false,
+            message: `A file with the name ${mp4Filename} already exists and was skipped.`,
+            filename: originalFilename,
+          };
+        }
 
-      // Compress the video using fluent-ffmpeg
-      await compressVideo(tempOriginalPath, videoPath);
+        // Convert the file to a Buffer
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
 
-      // Remove the temporary original file
-      fs.unlinkSync(tempOriginalPath);
-
-      // Get the processed file size
-      const processedFileStats = fs.statSync(videoPath);
-      const processedFileSizeInMB = processedFileStats.size / (1024 * 1024);
-
-      // Read the processed file
-      const processedBuffer = fs.readFileSync(videoPath);
-
-      if (processedFileSizeInMB > 20) {
-        // For files larger than 20MB, use the File API
-        aiResponse = await analyzeVideoWithFileAPI(
-          processedBuffer,
-          file.type,
-          mp4Filename,
+        // Create a temporary path for the original video
+        const tempOriginalPath = path.join(
+          videosDir,
+          `temp_original_${originalFilename}`,
         );
-      } else {
+
+        // Save the original video file to temp location
+        await writeFile(tempOriginalPath, buffer);
+
+        // Compress the video using fluent-ffmpeg
+        await compressVideo(tempOriginalPath, videoPath);
+
+        // Remove the temporary original file
+        fs.unlinkSync(tempOriginalPath);
+
+        // Read the processed file
+        const processedBuffer = fs.readFileSync(videoPath);
+
         // For smaller files, use base64 encoding
         const base64Video = processedBuffer.toString("base64");
         aiResponse = await analyzeVideoWithAI(base64Video, file.type);
+      } else {
+        // Skip file operations and directly analyze the video
+        const bytes = await file.arrayBuffer();
+        const buffer = Buffer.from(bytes);
+        const base64Video = buffer.toString("base64");
+        aiResponse = await analyzeVideoWithAI(base64Video, file.type);
       }
+
+      // Transform AI response to our format
+      const aiObservations = aiResponse?.observations.map((obs, index) => ({
+        id: `ai-${index}`,
+        description: obs.description,
+        type: obs.type,
+        sentiment: obs.sentiment,
+        timestamp: obs.timestamp,
+      }));
+
+      // Create the analysis object
+      const analysis: VideoAnalysis = {
+        id: analysisId,
+        title: filenameWithoutExt,
+        videoUrl: `/videos/${filenameWithoutExt}.mp4`,
+        aiObservations: aiObservations,
+        summary: generateSummary(aiObservations),
+      };
+
+      // Save the analysis as JSON if not skipping file operations
+      if (!skipFileOperations) {
+        const publicDir = path.join(process.cwd(), "public");
+        const videosDir = path.join(publicDir, "videos");
+        const jsonPath = path.join(videosDir, `${filenameWithoutExt}.json`);
+        await writeFile(jsonPath, JSON.stringify(analysis, null, 2));
+      }
+
+      return {
+        success: true,
+        message: "Video uploaded and analyzed successfully",
+        analysis,
+        filename: originalFilename,
+      };
+    } else if (fileType && fileUrl) {
+      aiResponse = await analyzeVideoWithFileAPI(fileUrl, fileType);
+
+      // Transform AI response to our format
+      const aiObservations = aiResponse?.observations.map((obs, index) => ({
+        id: `ai-${index}`,
+        description: obs.description,
+        type: obs.type,
+        sentiment: obs.sentiment,
+        timestamp: obs.timestamp,
+      }));
+
+      // Create the analysis object
+      const analysis: VideoAnalysis = {
+        id: analysisId,
+        title: "ignore",
+        videoUrl: "ignore",
+        aiObservations: aiObservations,
+        summary: generateSummary(aiObservations),
+      };
+      return {
+        success: true,
+        message: "Video uploaded and analyzed successfully",
+        analysis,
+        filename: "ignore",
+      };
     } else {
-      // Skip file operations and directly analyze the video
-      const bytes = await file.arrayBuffer();
-      const buffer = Buffer.from(bytes);
-      const base64Video = buffer.toString("base64");
-      aiResponse = await analyzeVideoWithAI(base64Video, file.type);
+      return { success: false, message: "No video file provided" };
     }
-
-    // Transform AI response to our format
-    const aiObservations = aiResponse.observations.map((obs, index) => ({
-      id: `ai-${index}`,
-      description: obs.description,
-      type: obs.type,
-      sentiment: obs.sentiment,
-      timestamp: obs.timestamp,
-    }));
-
-    // Create the analysis object
-    const analysis: VideoAnalysis = {
-      id: analysisId,
-      title: filenameWithoutExt,
-      videoUrl: `/videos/${filenameWithoutExt}.mp4`,
-      aiObservations: aiObservations,
-      summary: generateSummary(aiObservations),
-    };
-
-    // Save the analysis as JSON if not skipping file operations
-    if (!skipFileOperations) {
-      const publicDir = path.join(process.cwd(), "public");
-      const videosDir = path.join(publicDir, "videos");
-      const jsonPath = path.join(videosDir, `${filenameWithoutExt}.json`);
-      await writeFile(jsonPath, JSON.stringify(analysis, null, 2));
-    }
-
-    return {
-      success: true,
-      message: "Video uploaded and analyzed successfully",
-      analysis,
-      filename: originalFilename,
-    };
   } catch (error) {
     console.error("Error processing video:", error);
     return {
@@ -178,32 +201,32 @@ export async function processVideoAnalysis(
 }
 
 // Common response schema for Gemini API
-const getResponseSchema = () => ({
-  type: "object",
+const getResponseSchema = (): SchemaUnion => ({
+  type: Type.OBJECT,
   properties: {
     observations: {
-      type: "array",
+      type: Type.ARRAY,
       description: "Array of observation objects",
       items: {
-        type: "object",
+        type: Type.OBJECT,
         properties: {
           description: {
-            type: "string",
+            type: Type.STRING,
             description:
               "Detailed description of the observation (e.g., 'The room looks clean')",
           },
           sentiment: {
-            type: "string",
+            type: Type.STRING,
             description: "Whether the observation is positive or negative",
             enum: ["positive", "negative"],
           },
           type: {
-            type: "string",
+            type: Type.STRING,
             description: "Category of the observation",
             enum: ["cleanliness", "maintenance"],
           },
           timestamp: {
-            type: "string",
+            type: Type.STRING,
             description:
               "Timestamp in the video where this observation was made (e.g., '0:45', '2:12')",
           },
@@ -252,84 +275,69 @@ Analyze property videos to identify both positive aspects and issues needing att
 
 Remember to be detailed and specific in your observations to help maintain our high standards. Always include a timestamp for each observation so we can easily locate the issue in the video.`;
 
-// Initialize Gemini model with common configuration
-function initializeGeminiModel() {
-  const genAI = new GoogleGenerativeAI(constants.GEMINI_API_KEY || "");
-
-  return genAI.getGenerativeModel({
-    model: "gemini-1.5-pro",
-    generationConfig: {
-      responseMimeType: "application/json",
-      responseSchema: getResponseSchema(),
-    },
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  } as any);
-}
+const genAI = new GoogleGenAI({ apiKey: constants.GEMINI_API_KEY || "" });
 
 async function analyzeVideoWithFileAPI(
-  videoBuffer: Buffer,
-  mimeType: string,
-  filename: string,
+  fileUrl: string,
+  mime: string,
 ): Promise<AIResponse> {
   try {
-    // Initialize the File Manager with API key
-    const fileManager = new GoogleAIFileManager(constants.GEMINI_API_KEY || "");
+    console.log("DOWNLOADING FILE: ", fileUrl, mime);
+    const downloadFile = await fetch(fileUrl).then((res) => res.blob());
+    // Store in tmp file.
+    const tempFilePath = path.join(
+      process.cwd(),
+      "tmp",
+      `temp_video_${uuidv4()}.webm`,
+    );
+    // Ensure the tmp directory exists
+    if (!fs.existsSync(path.join(process.cwd(), "tmp"))) {
+      await mkdir(path.join(process.cwd(), "tmp"), { recursive: true });
+    }
 
-    // Create a temporary file path for the upload
-    const tempFilePath = path.join(process.cwd(), "temp_" + filename);
+    // Store in tempFilePath
+    const fileBuffer = await downloadFile.arrayBuffer();
+    const buffer = Buffer.from(fileBuffer);
+    // Write buffer to file.
+    fs.writeFileSync(tempFilePath, buffer);
 
-    // Write the buffer to a temporary file
-    await writeFile(tempFilePath, videoBuffer);
+    let myfile = await genAI.files.upload({
+      file: tempFilePath,
+      config: { mimeType: mime },
+    });
+    console.log("GENERATING CONTENT", myfile.uri, myfile.mimeType);
 
-    // Upload the file to Google AI
-    console.log("Uploading large video file to Google AI File API...");
-    const uploadResponse = await fileManager.uploadFile(tempFilePath, {
-      mimeType: mimeType,
-      displayName: filename,
+    let count = 0;
+    while (
+      myfile.state !== FileState.ACTIVE &&
+      myfile.state !== FileState.FAILED
+    ) {
+      console.log(`BEFORE IN STATE: ${count}`, myfile.state);
+      myfile = await genAI.files.get({ name: myfile.name! });
+      console.log(`IN STATE: ${count++}`, myfile.state);
+      await new Promise((resolve) => setTimeout(resolve, 100));
+    }
+
+    if (myfile.state === FileState.FAILED) {
+      throw new Error("File upload to google failed.");
+    }
+    // Generate content using the file URI
+    const result = await genAI.models.generateContent({
+      model: "gemini-1.5-pro",
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: getResponseSchema(),
+      },
+      contents: createUserContent([
+        createPartFromUri(myfile.uri!, myfile.mimeType!),
+        getAnalysisPrompt(),
+      ]),
     });
 
-    // Delete the temporary file after upload
+    const response: AIResponse = JSON.parse(result.text ?? "");
+
+    // Remove the temporary file
     fs.unlinkSync(tempFilePath);
-
-    // Get the file name from the response
-    const name = uploadResponse.file.name;
-
-    // Poll for file processing status
-    console.log("Waiting for video processing...");
-    let file = await fileManager.getFile(name);
-    while (file.state === FileState.PROCESSING) {
-      // Wait 5 seconds before checking again
-      await new Promise((resolve) => setTimeout(resolve, 5000));
-      file = await fileManager.getFile(name);
-    }
-
-    if (file.state === FileState.FAILED) {
-      throw new Error("Video processing failed in Google AI File API.");
-    }
-
-    console.log(
-      `File ${file.displayName} is ready for inference as ${file.uri}`,
-    );
-
-    // Initialize the Gemini model
-    const model = initializeGeminiModel();
-
-    // Generate content using the file URI
-    const result = await model.generateContent([
-      {
-        fileData: {
-          mimeType: file.mimeType,
-          fileUri: file.uri,
-        },
-      },
-      {
-        text: getAnalysisPrompt(),
-      },
-    ]);
-
-    // Parse the response
-    const responseText = result.response.text();
-    const response: AIResponse = JSON.parse(responseText);
 
     return response;
   } catch (error) {
@@ -343,12 +351,14 @@ async function analyzeVideoWithAI(
   mimeType: string,
 ): Promise<AIResponse> {
   try {
-    // Initialize the Gemini model
-    const model = initializeGeminiModel();
-
     // Generate content using the video data
-    const result = await model.generateContent(
-      [
+    const result = await genAI.models.generateContent({
+      model: "gemini-1.5-pro",
+      config: {
+        responseMimeType: "application/json",
+        responseSchema: getResponseSchema(),
+      },
+      contents: [
         {
           inlineData: {
             mimeType: mimeType,
@@ -359,11 +369,10 @@ async function analyzeVideoWithAI(
           text: getAnalysisPrompt(),
         },
       ],
-      {},
-    );
+    });
 
     // Parse the response
-    const responseText = result.response.text();
+    const responseText = result.text ?? "";
     const response: AIResponse = JSON.parse(responseText);
 
     return response;
