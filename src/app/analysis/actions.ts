@@ -285,15 +285,7 @@ async function analyzeVideoWithFileAPI(
     console.log("DOWNLOADING FILE: ", fileUrl, mime);
     const downloadFile = await fetch(fileUrl).then((res) => res.blob());
     // Store in tmp file.
-    const tempFilePath = path.join(
-      process.cwd(),
-      "tmp",
-      `temp_video_${uuidv4()}.webm`,
-    );
-    // Ensure the tmp directory exists
-    if (!fs.existsSync(path.join(process.cwd(), "tmp"))) {
-      await mkdir(path.join(process.cwd(), "tmp"), { recursive: true });
-    }
+    const tempFilePath = path.join("/tmp", `temp_video_${uuidv4()}.webm`);
 
     // Store in tempFilePath
     const fileBuffer = await downloadFile.arrayBuffer();
