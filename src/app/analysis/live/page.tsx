@@ -28,22 +28,28 @@ export default function LiveAnalysisPage() {
   const [currentObservationIndex, setCurrentObservationIndex] = useState(0);
 
   const handleRecordingDone = async (videoData: {
-    blob: Blob;
+    blob?: Blob;
     mimeType: string;
-    url: string;
+    file?: File;
   }) => {
     setIsRecording(false);
     setIsProcessing(true);
 
     try {
       // Create a File object from the Blob
-      const file = new File(
-        [videoData.blob],
-        `live-recording-${Date.now()}.webm`,
-        {
+      const file = (() => {
+        if (videoData.file) {
+          return videoData.file;
+        }
+
+        if (!videoData.blob) {
+          return;
+        }
+        return new File([videoData.blob], `live-recording-${Date.now()}.webm`, {
           type: videoData.mimeType,
-        },
-      );
+        });
+      })();
+      if (!file) return;
 
       const uploadBlob = await upload(file.name, file, {
         access: "public",
@@ -60,13 +66,10 @@ export default function LiveAnalysisPage() {
       const result = await processVideoAnalysis(formData);
 
       if (result.success && result.analysis) {
-        // Store the video URL locally instead of using the server path
-        const localVideoUrl = videoData.url;
-
         // Create a modified analysis object with the local URL
         const localAnalysis = {
           ...result.analysis,
-          videoUrl: localVideoUrl,
+          videoUrl: uploadBlob.url,
         };
 
         setAnalysis(localAnalysis);

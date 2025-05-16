@@ -100,7 +100,7 @@ export const VideoRecorderNew = ({
         alert("Failed to save recording: ");
       }
     }
-  }, [activeRecordings, onDone, stopRecording]);
+  }, [activeRecordings, clearAllRecordings, onDone, stopRecording]);
 
   const handleCancelRecording = useCallback(async () => {
     await Promise.all(
@@ -157,11 +157,30 @@ export const VideoRecorderNew = ({
 
       {/* Controls */}
       <div className="flex justify-between items-center mt-4 gap-2">
-        <Button onClick={switchDevice}>Switch Device</Button>
+        <Button onClick={switchDevice}>Switch Camera</Button>
+
         {!hideCancel && (
           <Button variant="outline" onClick={handleCancelRecording}>
             Cancel
           </Button>
+        )}
+        {!(activeRecording?.status === "RECORDING") && (
+          <label className="relative">
+            <Button>
+              Upload file
+              <input
+                type="file"
+                multiple={false}
+                className="opacity-0 absolute inset-0"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    onDone?.({ file, mimeType: file.type });
+                  }
+                }}
+              />
+            </Button>
+          </label>
         )}
         {activeRecording?.status === "RECORDING" ? (
           <Button variant="destructive" onClick={handleDoneRecording}>

@@ -1,7 +1,8 @@
 export interface RecordedVideoDataNew {
-  blob: Blob;
+  blob?: Blob;
   mimeType: string;
-  url: string;
+  url?: string;
+  file?: File;
 }
 
 export interface VideoRecorderNewProps {

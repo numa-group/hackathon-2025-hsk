@@ -65,7 +65,11 @@ export default function VerifyPage() {
       try {
         // Create FormData and append the video blob
         const formData = new FormData();
-        formData.append("video", videoData.blob, "recorded-video.mp4");
+        if (videoData.blob) {
+          formData.append("video", videoData.blob, "recorded-video.mp4");
+        } else {
+          return;
+        }
 
         // Use our server action to process the video
         const response = await processVideoVerification(
