@@ -31,6 +31,7 @@ export default function LiveAnalysisPage() {
     blob?: Blob;
     mimeType: string;
     file?: File;
+    url?: string;
   }) => {
     setIsRecording(false);
     setIsProcessing(true);
@@ -69,7 +70,7 @@ export default function LiveAnalysisPage() {
         // Create a modified analysis object with the local URL
         const localAnalysis = {
           ...result.analysis,
-          videoUrl: uploadBlob.url,
+          videoUrl: videoData.url ?? uploadBlob.url,
         };
 
         setAnalysis(localAnalysis);
