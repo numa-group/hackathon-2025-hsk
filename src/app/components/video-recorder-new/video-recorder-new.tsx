@@ -5,6 +5,7 @@ import { useRecordWebcam } from "react-record-webcam";
 import { Button } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { VideoRecorderNewProps } from "./types";
+import { SwitchCamera } from "lucide-react";
 
 export const VideoRecorderNew = ({
   onDone,
@@ -119,7 +120,17 @@ export const VideoRecorderNew = ({
   const [activeRecording] = activeRecordings;
 
   return (
-    <div className="flex flex-col h-full" style={{ width, height }}>
+    <div className="flex flex-col h-full relative" style={{ width, height }}>
+      <Button
+        onClick={switchDevice}
+        variant="secondary"
+        className={cn("absolute top-0 right-0 z-10", {
+          "opacity-0 pointer-events-none":
+            activeRecording?.status === "RECORDING",
+        })}
+      >
+        <SwitchCamera />
+      </Button>
       <div
         className={cn("relative rounded-lg overflow-hidden bg-black flex-1")}
       >
@@ -157,16 +168,32 @@ export const VideoRecorderNew = ({
 
       {/* Controls */}
       <div className="flex justify-between items-center mt-4 gap-2">
-        <Button onClick={switchDevice}>Switch Camera</Button>
-
         {!hideCancel && (
           <Button variant="outline" onClick={handleCancelRecording}>
             Cancel
           </Button>
         )}
+        {activeRecording?.status === "RECORDING" ? (
+          <Button
+            variant="destructive"
+            className="flex-1"
+            onClick={handleDoneRecording}
+          >
+            Stop Recording
+          </Button>
+        ) : (
+          <Button
+            disabled={activeRecordings.length <= 0}
+            onClick={async () => {
+              await startRecording(activeRecording.id);
+            }}
+          >
+            Start Recording
+          </Button>
+        )}
         {!(activeRecording?.status === "RECORDING") && (
           <label className="relative">
-            <Button>
+            <Button variant="outline">
               Upload file
               <input
                 type="file"
@@ -181,20 +208,6 @@ export const VideoRecorderNew = ({
               />
             </Button>
           </label>
-        )}
-        {activeRecording?.status === "RECORDING" ? (
-          <Button variant="destructive" onClick={handleDoneRecording}>
-            Stop Recording
-          </Button>
-        ) : (
-          <Button
-            disabled={activeRecordings.length <= 0}
-            onClick={async () => {
-              await startRecording(activeRecording.id);
-            }}
-          >
-            Start Recording
-          </Button>
         )}
       </div>
     </div>

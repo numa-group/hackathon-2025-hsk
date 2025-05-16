@@ -126,9 +126,6 @@ export default function LiveAnalysisPage() {
 
         {isRecording ? (
           <Card>
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base">Recording</CardTitle>
-            </CardHeader>
             <CardContent>
               <VideoRecorderNew
                 hideCancel
